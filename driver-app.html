@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRIVER MANAGEMENT SYSTEM</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Futuristic Theme */
+        :root {
+            --primary-cyan: #00FFFF;
+            --primary-blue: #0066CC;
+            --dark-bg: #0a0a2a;
+            --card-bg: rgba(10, 10, 42, 0.8);
+            --accent-purple: #8A2BE2;
+            --success-green: #00FF7F;
+            --warning-orange: #FF8C00;
+            --danger-red: #FF4500;
+            --text-light: #E0E0FF;
+            --glow-cyan: 0 0 15px #00FFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--dark-bg) 0%, #000015 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--glow-cyan);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px solid var(--primary-cyan);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            text-shadow: var(--glow-cyan);
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(0, 102, 204, 0.3);
+            padding: 10px;
+            gap: 5px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-cyan);
+            color: var(--dark-bg);
+            font-weight: bold;
+            border-color: var(--accent-purple);
+        }
+
+        /* Status Panel */
+        .status-panel {
+            background: rgba(0, 102, 204, 0.2);
+            padding: 20px;
+            margin: 15px;
+            border-radius: 15px;
+            border-left: 3px solid var(--primary-cyan);
+        }
+
+        .location-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .geofence-indicator {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .inside { background-color: var(--success-green); }
+        .outside { background-color: var(--danger-red); }
+
+        /* Stats Section */
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0, 255, 127, 0.1);
+            margin: 15px;
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--success-green);
+            text-shadow: 0 0 5px var(--success-green);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Buttons */
+        .controls-section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .clock-button {
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-cyan));
+            color: white;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 40px;
+            margin: 10px;
+            cursor: pointer;
+            box-shadow: var(--glow-cyan);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .clock-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--primary-cyan);
+        }
+
+        .clock-out {
+            background: linear-gradient(45deg, var(--danger-red), var(--warning-orange));
+            border-color: var(--warning-orange);
+        }
+
+        /* Task Management */
+        .task-management {
+            background: rgba(138, 43, 226, 0.1);
+            margin: 15px;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .add-task-btn {
+            background: linear-gradient(45deg, var(--accent-purple), var(--primary-blue));
+            color: white;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .add-task-btn:hover {
+            box-shadow: var(--glow-cyan);
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-cyan);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .delete-btn {
+            color: var(--danger-red);
+        }
+
+        .task-info {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .status-pending { background: rgba(255, 140, 0, 0.3); color: var(--warning-orange); }
+        .status-progress { background: rgba(0, 102, 204, 0.3); color: var(--primary-cyan); }
+        .status-completed { background: rgba(0, 255, 127, 0.3); color: var(--success-green); }
+
+        .repeat-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            background: rgba(138, 43, 226, 0.3);
+            color: var(--accent-purple);
+            margin-left: 8px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 42, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid var(--primary-cyan);
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-cyan);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-cyan);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-cyan);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, var(--success-green), #00AA66);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 DRIVER APP</h1>
+            <p>Welcome, Alex! 🌟</p>
+
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
+                <div class="nav-tab" onclick="showTab('tasks')">TASKS</div>
+                <div class="nav-tab" onclick="showTab('schedule')">SCHEDULE</div>
+                <div class="nav-tab" onclick="showTab('admin')">ADMIN</div>
+            </div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div id="dashboard">
+            <div class="status-panel">
+                <div class="location-status">
+                    <span class="geofence-indicator inside"></span>
+                    <div>
+                        <strong>📍 Currently at: 📦 Main Warehouse</strong>
+                        <br>
+                        <small>[✓] Inside Geofence</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-item">
+                    <div class="stat-value">2h 45m</div>
+                    <div class="stat-label">🕐 Hours Worked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3/4</div>
+                    <div class="stat-label">✅ Tasks Done</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">No</div>
+                    <div class="stat-label">🍎 Break Taken</div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <button class="clock-button">🟢 CLOCK IN</button>
+                <button class="clock-button clock-out">🔴 CLOCK OUT</button>
+
+                <div class="task-management">
+                    <h3>📸 TASK DOCUMENTATION</h3>
+                    <p>Current Task: Wash Truck</p>
+                    <p>Due: Today, 3:00 PM</p>
+
+                    <div class="photo-buttons">
+                        <button class="add-task-btn">📷 Take Photo</button>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-header">
+                            <span class="task-title">Truck Wash</span>
+                        </div>
+                        <div class="task-info">Due: Today, 3:00 PM</div>
+                        <span class="task-status status-progress">In Progress</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks Tab -->
+        <div id="tasks" style="display: none;">
+            <div class="task-management">
+                <h3>📋 MANAGE TASKS</h3>
+                <button class="add-task-btn" onclick="openTaskModal()">➕ ADD NEW TASK</button>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Wash Truck Exterior</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Due: Today, 3:00 PM</div>
+                        <div>Priority: High</div>
+                    </div>
+                    <span class="task-status status-progress">In Progress</span>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Check Oil Levels</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Due: Tomorrow, 9:00 AM</div>
+                        <div>Priority: Medium</div>
+                    </div>
+                    <span class="task-status status-pending">Pending</span>
+                    <span class="repeat-badge">🔁 Weekly</span>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Submit Weekly Report</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Due: Next Monday</div>
+                        <div>Priority: Low</div>
+                    </div>
+                    <span class="task-status status-completed">Completed</span>
+                    <span class="repeat-badge">🔁 Monthly</span>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Annual Vehicle Inspection</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Due: Dec 15, 2024</div>
+                        <div>Priority: High</div>
+                    </div>
+                    <span class="task-status status-pending">Pending</span>
+                    <span class="repeat-badge">🔁 Yearly</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Schedule Tab -->
+        <div id="schedule" style="display: none;">
+            <div class="task-management">
+                <h3>📅 MONTHLY SCHEDULE - READ ONLY</h3>
+                <table style="width: 100%; border-collapse: collapse; color: var(--text-light);">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--primary-cyan);">
+                            <th style="padding: 12px; text-align: left;">Date</th>
+                            <th style="padding: 12px; text-align: center;">Clock In</th>
+                            <th style="padding: 12px; text-align: center;">Clock Out</th>
+                            <th style="padding: 12px; text-align: center;">Total Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
+                            <td style="padding: 12px;">Jun 1</td>
+                            <td style="padding: 12px; text-align: center;">08:00 AM</td>
+                            <td style="padding: 12px; text-align: center;">04:30 PM</td>
+                            <td style="padding: 12px; text-align: center;">8.5h</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
+                            <td style="padding: 12px;">Jun 2</td>
+                            <td style="padding: 12px; text-align: center;">08:15 AM</td>
+                            <td style="padding: 12px; text-align: center;">04:45 PM</td>
+                            <td style="padding: 12px; text-align: center;">8.5h</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
+                            <td style="padding: 12px;">Jun 3</td>
+                            <td style="padding: 12px; text-align: center;">07:45 AM</td>
+                            <td style="padding: 12px; text-align: center;">05:00 PM</td>
+                            <td style="padding: 12px; text-align: center;">9.25h</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Admin Tab -->
+        <div id="admin" style="display: none;">
+            <div class="task-management">
+                <h3>🔐 ADMIN PANEL</h3>
+                <p style="margin-bottom: 20px;">Manage driver tasks and schedules</p>
+
+                <button class="add-task-btn" onclick="openTaskModal()">➕ ADD TASK FOR DRIVER</button>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Wash Truck Exterior</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Assigned: Alex Driver</div>
+                        <div>Due: Today, 3:00 PM</div>
+                        <div>Priority: High</div>
+                    </div>
+                    <span class="task-status status-progress">In Progress</span>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Weekly Maintenance Check</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Assigned: Alex Driver</div>
+                        <div>Due: Tomorrow</div>
+                        <div>Priority: Medium</div>
+                    </div>
+                    <span class="task-status status-pending">Pending</span>
+                    <span class="repeat-badge">🔁 Weekly</span>
+                </div>
+
+                <div class="task-management">
+                    <h3>📊 DRIVER STATS</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div style="background: rgba(0,102,204,0.2); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 24px; color: var(--success-green);">16.25h</div>
+                            <div>Weekly Hours</div>
+                        </div>
+                        <div style="background: rgba(255,69,0,0.2); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 24px; color: var(--warning-orange);">3.75h</div>
+                            <div>Overtime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Modal -->
+        <div id="taskModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeTaskModal()">&times;</span>
+                <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input type="text" class="form-input" placeholder="Enter task title...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-input" placeholder="Enter description...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="datetime-local" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Repeat Option</label>
+                    <select class="form-input" id="repeatOption">
+                        <option value="none">📅 None (One-time)</option>
+                        <option value="daily">🔄 Daily</option>
+                        <option value="weekly">🔄 Weekly</option>
+                        <option value="monthly">🔄 Monthly</option>
+                        <option value="yearly">🔄 Yearly</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <select class="form-input">
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+
+                <button class="btn-submit" onclick="saveTask()">💾 SAVE TASK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTask = null;
+
+        function showTab(tabId) {
+            // Hide all tabs
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('tasks').style.display = 'none';
+            document.getElementById('schedule').style.display = 'none';
+            document.getElementById('admin').style.display = 'none';
+
+            // Show selected tab
+            document.getElementById(tabId).style.display = 'block';
+
+            // Update active tab
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        function openTaskModal(task = null) {
+            currentTask = task;
+            document.getElementById('taskModal').style.display = 'flex';
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').style.display = 'none';
+            currentTask = null;
+        }
+
+        function saveTask() {
+            const title = document.querySelector('input[type="text"]:nth-child(1)').value;
+            const description = document.querySelector('input[type="text"]:nth-child(2)').value;
+            const dueDate = document.querySelector('input[type="datetime-local"]').value;
+            const repeat = document.getElementById('repeatOption').value;
+            const priority = document.querySelector('select:nth-child(2)').value;
+
+            if (title) {
+                // In a real app, this would save to database
+                console.log('Task Saved:', { title, description, dueDate, repeat, priority });
+                alert('✅ Task saved successfully!');
+                closeTaskModal();
+            } else {
+                alert('❌ Please enter a task title');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.id === 'taskModal') {
+                closeTaskModal();
+            }
+        }
+    </script>
+</body>
+</html>
