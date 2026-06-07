@@ -3,6 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚛 DRIVER APP</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <style>
+        /* [Keep all your existing CSS from before] */
+        :root {
+            --primary-cyan: #00FFFF;
+            --primary-blue: #0066CC;
+            --dark-bg: #0a0a2a;
+            --card-bg: rgba(10, 10, 42, 0.8);
+            --accent-purple: #8A2BE2;
+            --success-green: #00FF7F;
+            --warning-orange: #FF8C00;
+            --danger-red: #FF4500;
+            --text-light: #E0E0FF;
+            --glow-cyan: 0 0 15px #00FFFF;
+        }
+        /* ... rest of your CSS ... */
+    </style>
+</head>
+<body>
+    <!-- Add this where you want the auth buttons -->
+    <div id="auth-section" class="status-panel" style="margin: 15px;">
+        <div id="user-info" style="display: none; align-items: center; gap: 15px;">
+            <img id="user-avatar" src="" alt="User" style="width: 40px; height: 40px; border-radius: 50%;">
+            <div>
+                <strong id="user-name">User Name</strong>
+                <br>
+                <small id="user-email">email@example.com</small>
+            </div>
+        </div>
+        <button id="auth-button" class="clock-button" style="width: auto; padding: 10px 20px;">
+            🔐 Sign in with Google
+        </button>
+        <button id="logout-button" class="clock-button clock-out" style="display: none; width: auto; padding: 10px 20px;">
+            🚪 Logout
+        </button>
+    </div>
+
+    <!-- Rest of your existing HTML -->
+    <!-- ... -->
+
+    <script>
+        // Your Firebase config (REPLACE WITH YOUR ACTUAL CONFIG)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Auth state listener
+        auth.onAuthStateChanged(user => {
+            const userInfoDiv = document.getElementById('user-info');
+            const authButton = document.getElementById('auth-button');
+            const logoutButton = document.getElementById('logout-button');
+
+            if (user) {
+                // User is signed in
+                userInfoDiv.style.display = 'flex';
+                authButton.style.display = 'none';
+                logoutButton.style.display = 'block';
+
+                document.getElementById('user-name').textContent = user.displayName;
+                document.getElementById('user-email').textContent = user.email;
+                document.getElementById('user-avatar').src = user.photoURL;
+
+                console.log('User logged in:', user);
+            } else {
+                // User is signed out
+                userInfoDiv.style.display = 'none';
+                authButton.style.display = 'block';
+                logoutButton.style.display = 'none';
+
+                console.log('User logged out');
+            }
+        });
+
+        // Sign in with Google
+        document.getElementById('auth-button').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    console.log('Sign in successful', result.user);
+                })
+                .catch(error => {
+                    console.error('Sign in error', error);
+                    alert('Login failed: ' + error.message);
+                });
+        });
+
+        // Logout
+        document.getElementById('logout-button').addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    console.log('Logout successful');
+                })
+                .catch(error => {
+                    console.error('Logout error', error);
+                });
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DRIVER MANAGEMENT SYSTEM</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
