@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚛 DRIVER APP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <style>
+        :root {
+            --primary-cyan: #00FFFF;
+            --primary-blue: #0066CC;
+            --dark-bg: #0a0a2a;
+            --card-bg: rgba(10, 10, 42, 0.8);
+            --accent-purple: #8A2BE2;
+            --success-green: #00FF7F;
+            --warning-orange: #FF8C00;
+            --danger-red: #FF4500;
+            --text-light: #E0E0FF;
+            --glow-cyan: 0 0 15px #00FFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--dark-bg) 0%, #000015 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--glow-cyan);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-purple));
+            color: white;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px solid var(--primary-cyan);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+            text-shadow: var(--glow-cyan);
+        }
+
+        .nav-tabs {
+            display: flex;
+            background: rgba(0, 102, 204, 0.3);
+            padding: 10px;
+            gap: 5px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-tab.active {
+            background: var(--primary-cyan);
+            color: var(--dark-bg);
+            font-weight: bold;
+            border-color: var(--accent-purple);
+        }
+
+        .status-panel {
+            background: rgba(0, 102, 204, 0.2);
+            padding: 20px;
+            margin: 15px;
+            border-radius: 15px;
+            border-left: 3px solid var(--primary-cyan);
+        }
+
+        .location-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .geofence-indicator {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .inside { background-color: var(--success-green); }
+        .outside { background-color: var(--danger-red); }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0, 255, 127, 0.1);
+            margin: 15px;
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--success-green);
+            text-shadow: 0 0 5px var(--success-green);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .controls-section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .clock-button {
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-cyan));
+            color: white;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 40px;
+            margin: 10px;
+            cursor: pointer;
+            box-shadow: var(--glow-cyan);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .clock-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--primary-cyan);
+        }
+
+        .clock-out {
+            background: linear-gradient(45deg, var(--danger-red), var(--warning-orange));
+            border-color: var(--warning-orange);
+        }
+
+        .task-management {
+            background: rgba(138, 43, 226, 0.1);
+            margin: 15px;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .add-task-btn {
+            background: linear-gradient(45deg, var(--accent-purple), var(--primary-blue));
+            color: white;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .add-task-btn:hover {
+            box-shadow: var(--glow-cyan);
+        }
+
+        .task-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-cyan);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-title {
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn, .delete-btn {
+            background: none;
+            border: none;
+            color: var(--primary-cyan);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .delete-btn {
+            color: var(--danger-red);
+        }
+
+        .task-info {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .status-pending { background: rgba(255, 140, 0, 0.3); color: var(--warning-orange); }
+        .status-progress { background: rgba(0, 102, 204, 0.3); color: var(--primary-cyan); }
+        .status-completed { background: rgba(0, 255, 127, 0.3); color: var(--success-green); }
+
+        .repeat-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            background: rgba(138, 43, 226, 0.3);
+            color: var(--accent-purple);
+            margin-left: 8px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 42, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid var(--primary-cyan);
+            max-width: 400px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--primary-cyan);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-cyan);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid var(--primary-cyan);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .btn-submit {
+            background: linear-gradient(45deg, var(--success-green), #00AA66);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Auth Styles */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+        }
+
+        .auth-box {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            border: 2px solid var(--primary-cyan);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="auth-container">
+        <div class="auth-box">
+            <h2 style="color: var(--primary-cyan); margin-bottom: 20px;">🚛 DRIVER APP</h2>
+            <p style="margin-bottom: 30px;">Sign in to access your dashboard</p>
+            <button id="auth-button" class="clock-button">
+                🔐 Sign in with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Dashboard Content (Hidden initially) -->
+    <div id="dashboard-content" style="display: none;">
+        <div class="header">
+            <h1>🚀 DRIVER APP</h1>
+            <p>Welcome, <span id="user-name">User</span>! 🌟</p>
+
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
+                <div class="nav-tab" onclick="showTab('tasks')">TASKS</div>
+                <div class="nav-tab" onclick="showTab('schedule')">SCHEDULE</div>
+                <div class="nav-tab" onclick="showTab('admin')">ADMIN</div>
+            </div>
+        </div>
+
+        <!-- Rest of your dashboard content remains the same -->
+        <div id="dashboard">
+            <div class="status-panel">
+                <div class="location-status">
+                    <span class="geofence-indicator inside"></span>
+                    <div>
+                        <strong>📍 Currently at: 📦 Main Warehouse</strong>
+                        <br>
+                        <small>[✓] Inside Geofence</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <div class="stat-item">
+                    <div class="stat-value">2h 45m</div>
+                    <div class="stat-label">🕐 Hours Worked</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">3/4</div>
+                    <div class="stat-label">✅ Tasks Done</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">No</div>
+                    <div class="stat-label">🍎 Break Taken</div>
+                </div>
+            </div>
+
+            <div class="controls-section">
+                <button class="clock-button">🟢 CLOCK IN</button>
+                <button class="clock-button clock-out">🔴 CLOCK OUT</button>
+
+                <div class="task-management">
+                    <h3>📸 TASK DOCUMENTATION</h3>
+                    <p>Current Task: Wash Truck</p>
+                    <p>Due: Today, 3:00 PM</p>
+
+                    <div class="photo-buttons">
+                        <button class="add-task-btn">📷 Take Photo</button>
+                    </div>
+
+                    <div class="task-card">
+                        <div class="task-header">
+                            <span class="task-title">Truck Wash</span>
+                        </div>
+                        <div class="task-info">Due: Today, 3:00 PM</div>
+                        <span class="task-status status-progress">In Progress</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Other tabs remain the same as in previous version -->
+        <div id="tasks" style="display: none;">
+            <!-- ... your tasks content ... -->
+        </div>
+
+        <div id="schedule" style="display: none;">
+            <!-- ... your schedule content ... -->
+        </div>
+
+        <div id="admin" style="display: none;">
+            <!-- ... your admin content ... -->
+        </div>
+    </div>
+
+    <!-- Modal for tasks -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTaskModal()">&times;</span>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
+            <!-- ... your modal content ... -->
+        </div>
+    </div>
+
+    <!-- Firebase Configuration - REPLACE WITH YOUR ACTUAL CONFIG -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "your-project.firebaseapp.com",
+            projectId: "your-project",
+            storageBucket: "your-project.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Auth state listener
+        auth.onAuthStateChanged(user => {
+            const loginScreen = document.getElementById('login-screen');
+            const dashboardContent = document.getElementById('dashboard-content');
+            const userInfoDiv = document.getElementById('user-info');
+            const authButton = document.getElementById('auth-button');
+            const logoutButton = document.getElementById('logout-button');
+
+            if (user) {
+                // User is signed in - show dashboard
+                loginScreen.style.display = 'none';
+                dashboardContent.style.display = 'block';
+
+                // Update user info
+                document.getElementById('user-name').textContent = user.displayName || 'User';
+            } else {
+                // User is signed out - show login
+                loginScreen.style.display = 'flex';
+                dashboardContent.style.display = 'none';
+            }
+        });
+
+        // Sign in with Google
+        document.getElementById('auth-button').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    console.log('Sign in successful', result.user);
+                })
+                .catch(error => {
+                    console.error('Sign in error', error);
+                    alert('Login failed: ' + error.message);
+                });
+        });
+
+        // Other functions remain the same...
+        function showTab(tabId) {
+            // ... your existing tab switching logic ...
+        }
+
+        function openTaskModal(task = null) {
+            // ... your existing modal logic ...
+        }
+
+        function closeTaskModal() {
+            // ... your existing modal logic ...
+        }
+
+        function saveTask() {
+            // ... your existing save logic ...
+        }
+    </script>
+</body>
+</html>
