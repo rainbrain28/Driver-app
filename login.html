@@ -74,15 +74,6 @@
             border-color: var(--accent-purple);
         }
 
-        .admin-badge {
-            background: linear-gradient(45deg, var(--warning-orange), var(--danger-red));
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 10px;
-            margin-left: 8px;
-        }
-
         .task-management {
             background: rgba(138, 43, 226, 0.1);
             margin: 15px;
@@ -103,15 +94,6 @@
             transition: all 0.3s ease;
         }
 
-        .add-task-btn:hover {
-            box-shadow: var(--glow-cyan);
-        }
-
-        .add-task-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         .task-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -130,78 +112,6 @@
         .task-title {
             font-weight: bold;
             color: var(--primary-cyan);
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .edit-btn, .delete-btn {
-            background: none;
-            border: none;
-            color: var(--primary-cyan);
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        .delete-btn {
-            color: var(--danger-red);
-        }
-
-        .disabled-btn {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .map-link {
-            display: inline-block;
-            background: linear-gradient(45deg, #4285F4, #34A853);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            text-decoration: none;
-            margin-top: 8px;
-            margin-right: 8px;
-            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
-        }
-
-        .waze-link {
-            background: linear-gradient(45deg, #0077CC, #00AAFF);
-        }
-
-        .task-status {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-top: 8px;
-        }
-
-        .status-pending { background: rgba(255, 140, 0, 0.3); color: var(--warning-orange); }
-        .status-progress { background: rgba(0, 102, 204, 0.3); color: var(--primary-cyan); }
-        .status-completed { background: rgba(0, 255, 127, 0.3); color: var(--success-green); }
-
-        .repeat-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 10px;
-            background: rgba(138, 43, 226, 0.3);
-            color: var(--accent-purple);
-            margin-left: 8px;
-        }
-
-        .permission-warning {
-            background: rgba(255, 69, 0, 0.2);
-            border: 1px solid var(--warning-orange);
-            border-radius: 10px;
-            padding: 10px;
-            margin: 10px 0;
-            text-align: center;
-            color: var(--warning-orange);
-            font-size: 14px;
         }
 
         .modal {
@@ -280,88 +190,6 @@
             text-align: center;
             border: 2px solid var(--primary-cyan);
         }
-
-        .status-panel {
-            background: rgba(0, 102, 204, 0.2);
-            padding: 20px;
-            margin: 15px;
-            border-radius: 15px;
-            border-left: 3px solid var(--primary-cyan);
-        }
-
-        .location-status {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .geofence-indicator {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: var(--glow-cyan);
-        }
-
-        .inside { background-color: var(--success-green); }
-        .outside { background-color: var(--danger-red); }
-
-        .stats-section {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            padding: 20px;
-            background: rgba(0, 255, 127, 0.1);
-            margin: 15px;
-            border-radius: 15px;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--success-green);
-            text-shadow: 0 0 5px var(--success-green);
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-
-        .controls-section {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .clock-button {
-            background: linear-gradient(45deg, var(--primary-blue), var(--primary-cyan));
-            color: white;
-            border: 2px solid var(--primary-cyan);
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: bold;
-            padding: 15px 40px;
-            margin: 10px;
-            cursor: pointer;
-            box-shadow: var(--glow-cyan);
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .clock-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 25px var(--primary-cyan);
-        }
-
-        .clock-out {
-            background: linear-gradient(45deg, var(--danger-red), var(--warning-orange));
-            border-color: var(--warning-orange);
-        }
     </style>
 </head>
 <body>
@@ -369,7 +197,7 @@
         <div class="auth-box">
             <h2 style="color: var(--primary-cyan); margin-bottom: 20px;">🚛 DRIVER APP</h2>
             <p style="margin-bottom: 30px;">Sign in to access your dashboard</p>
-            <button id="auth-button" class="clock-button">🔐 Sign in with Google</button>
+            <button id="auth-button" class="add-task-btn">🔐 Sign in with Google</button>
         </div>
     </div>
 
@@ -377,192 +205,63 @@
         <div class="header">
             <h1>🚀 DRIVER APP</h1>
             <p>Welcome, <span id="user-name">User</span>! 🌟 <span id="role-badge"></span></p>
-
-            <div class="nav-tabs">
-                <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
-                <div class="nav-tab" onclick="showTab('tasks')">TASKS</div>
-                <div class="nav-tab" onclick="showTab('schedule')">SCHEDULE</div>
-                <div class="nav-tab" onclick="showTab('admin')">ADMIN</div>
-            </div>
         </div>
 
-        <div id="dashboard">
-            <div class="permission-warning" id="permission-warning" style="display: none;">
-                ⚠️ Members must request admin permission to add/edit/delete tasks
-            </div>
-
-            <div class="status-panel">
-                <div class="location-status">
-                    <span class="geofence-indicator inside"></span>
-                    <div>
-                        <strong>📍 Currently at: 📦 Main Warehouse</strong>
-                        <br>
-                        <small>[✓] Inside Geofence</small>
-                    </div>
-                </div>
-            </div>
-
-            <div class="stats-section">
-                <div class="stat-item">
-                    <div class="stat-value">2h 45m</div>
-                    <div class="stat-label">🕐 Hours Worked</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">3/4</div>
-                    <div class="stat-label">✅ Tasks Done</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-value">No</div>
-                    <div class="stat-label">🍎 Break Taken</div>
-                </div>
-            </div>
-
-            <div class="controls-section">
-                <button class="clock-button">🟢 CLOCK IN</button>
-                <button class="clock-button clock-out">🔴 CLOCK OUT</button>
-
-                <div class="task-management">
-                    <h3>📸 TASK DOCUMENTATION</h3>
-                    <p>Current Task: Wash Truck</p>
-                    <p>Due: Today, 3:00 PM</p>
-
-                    <div class="photo-buttons">
-                        <button class="add-task-btn" id="photo-btn">📷 Take Photo</button>
-                    </div>
-
-                    <div class="task-card">
-                        <div class="task-header">
-                            <span class="task-title">Truck Wash</span>
-                        </div>
-                        <div class="task-info">Due: Today, 3:00 PM</div>
-                        <span class="task-status status-progress">In Progress</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tasks" style="display: none;">
+        <div id="tasks" style="display: block;">
             <div class="task-management" id="tasks-container">
                 <h3>📋 MANAGE TASKS</h3>
                 <button class="add-task-btn" onclick="openTaskModal()" id="add-task-btn">➕ ADD NEW TASK</button>
             </div>
         </div>
+    </div>
 
-        <div id="schedule" style="display: none;">
-            <div class="task-management">
-                <h3>📅 MONTHLY SCHEDULE - READ ONLY</h3>
-                <table style="width: 100%; border-collapse: collapse; color: var(--text-light);">
-                    <thead>
-                        <tr style="border-bottom: 2px solid var(--primary-cyan);">
-                            <th style="padding: 12px; text-align: left;">Date</th>
-                            <th style="padding: 12px; text-align: center;">Clock In</th>
-                            <th style="padding: 12px; text-align: center;">Clock Out</th>
-                            <th style="padding: 12px; text-align: center;">Total Hours</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
-                            <td style="padding: 12px;">Jun 1</td>
-                            <td style="padding: 12px; text-align: center;">08:00 AM</td>
-                            <td style="padding: 12px; text-align: center;">04:30 PM</td>
-                            <td style="padding: 12px; text-align: center;">8.5h</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
-                            <td style="padding: 12px;">Jun 2</td>
-                            <td style="padding: 12px; text-align: center;">08:15 AM</td>
-                            <td style="padding: 12px; text-align: center;">04:45 PM</td>
-                            <td style="padding: 12px; text-align: center;">8.5h</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
-                            <td style="padding: 12px;">Jun 3</td>
-                            <td style="padding: 12px; text-align: center;">07:45 AM</td>
-                            <td style="padding: 12px; text-align: center;">05:00 PM</td>
-                            <td style="padding: 12px; text-align: center;">9.25h</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTaskModal()">&times;</span>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
+
+            <div class="form-group">
+                <label class="form-label">Task Title</label>
+                <input type="text" id="taskTitle" class="form-input" placeholder="Enter task title...">
             </div>
-        </div>
 
-        <div id="admin" style="display: none;">
-            <div class="task-management">
-                <h3>🔐 ADMIN PANEL</h3>
-                <p style="margin-bottom: 20px;">Manage driver roles and permissions</p>
-
-                <div class="task-management" id="user-list">
-                    <h3>👥 USER ROLES</h3>
-                    <div id="users-container">
-                    </div>
-                </div>
-
-                <div class="task-management">
-                    <h3>📊 DRIVER STATS</h3>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                        <div style="background: rgba(0,102,204,0.2); padding: 15px; border-radius: 10px; text-align: center;">
-                            <div style="font-size: 24px; color: var(--success-green);">16.25h</div>
-                            <div>Weekly Hours</div>
-                        </div>
-                        <div style="background: rgba(255,69,0,0.2); padding: 15px; border-radius: 10px; text-align: center;">
-                            <div style="font-size: 24px; color: var(--warning-orange);">3.75h</div>
-                            <div>Overtime</div>
-                        </div>
-                    </div>
-                </div>
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                <input type="text" id="taskDescription" class="form-input" placeholder="Enter description...">
             </div>
-        </div>
 
-        <div id="taskModal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="closeTaskModal()">&times;</span>
-                <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
-
-                <div class="permission-warning" id="task-permission-warning" style="display: none;">
-                    ⚠️ Member requesting permission to modify this task
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Task Title</label>
-                    <input type="text" class="form-input" placeholder="Enter task title...">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Description</label>
-                    <input type="text" class="form-input" placeholder="Enter description...">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">📍 Location Link (Google Maps/Waze)</label>
-                    <input type="url" class="form-input" id="mapLink" placeholder="Paste map link here...">
-                    <small style="color: var(--text-light); opacity: 0.7;">e.g., https://maps.google.com/?q=123+Main+St</small>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Due Date</label>
-                    <input type="datetime-local" class="form-input">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Repeat Option</label>
-                    <select class="form-input" id="repeatOption">
-                        <option value="none">📅 None (One-time)</option>
-                        <option value="daily">🔄 Daily</option>
-                        <option value="weekly">🔄 Weekly</option>
-                        <option value="monthly">🔄 Monthly</option>
-                        <option value="yearly">🔄 Yearly</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Priority</label>
-                    <select class="form-input">
-                        <option>High</option>
-                        <option>Medium</option>
-                        <option>Low</option>
-                    </select>
-                </div>
-
-                <button class="btn-submit" onclick="saveTask()">💾 SAVE TASK</button>
+            <div class="form-group">
+                <label class="form-label">📍 Location Link (Google Maps/Waze)</label>
+                <input type="url" class="form-input" id="mapLink" placeholder="Paste map link here...">
+                <small style="color: var(--text-light); opacity: 0.7;">e.g., https://maps.google.com/?q=123+Main+St</small>
             </div>
+
+            <div class="form-group">
+                <label class="form-label">Due Date</label>
+                <input type="datetime-local" id="dueDate" class="form-input">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Repeat Option</label>
+                <select class="form-input" id="repeatOption">
+                    <option value="none">📅 None (One-time)</option>
+                    <option value="daily">🔄 Daily</option>
+                    <option value="weekly">🔄 Weekly</option>
+                    <option value="monthly">🔄 Monthly</option>
+                    <option value="yearly">🔄 Yearly</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Priority</label>
+                <select class="form-input" id="priority">
+                    <option>High</option>
+                    <option>Medium</option>
+                    <option>Low</option>
+                </select>
+            </div>
+
+            <button class="btn-submit" onclick="saveTask()">💾 SAVE TASK</button>
         </div>
     </div>
 
@@ -583,6 +282,7 @@
         let currentUser = null;
         let currentUserRole = null;
         let isAdmin = false;
+        let currentTaskId = null;
 
         auth.onAuthStateChanged(async user => {
             const loginScreen = document.getElementById('login-screen');
@@ -597,10 +297,6 @@
                 await getUserRole(user.uid);
                 updateUIForRole();
                 loadTasks();
-
-                if (isAdmin) {
-                    loadUsers();
-                }
             } else {
                 loginScreen.style.display = 'flex';
                 dashboardContent.style.display = 'none';
@@ -642,92 +338,89 @@
 
         function updateUIForRole() {
             const roleBadge = document.getElementById('role-badge');
-            const permissionWarning = document.getElementById('permission-warning');
             const addTaskBtn = document.getElementById('add-task-btn');
-            const photoBtn = document.getElementById('photo-btn');
 
             if (isAdmin) {
                 roleBadge.innerHTML = '<span class="admin-badge">ADMIN</span>';
-                permissionWarning.style.display = 'none';
                 addTaskBtn.disabled = false;
-                photoBtn.disabled = false;
             } else {
                 roleBadge.innerHTML = '';
-                permissionWarning.style.display = 'block';
                 addTaskBtn.disabled = true;
-                photoBtn.disabled = true;
+                alert('You are a member. Admins will manage tasks.');
             }
         }
 
-        function loadUsers() {
-            db.collection('users').orderBy('createdAt', 'desc')
+        function loadTasks() {
+            db.collection("tasks").orderBy("createdAt", "desc")
                 .onSnapshot((querySnapshot) => {
-                    const usersContainer = document.getElementById('users-container');
-                    usersContainer.innerHTML = '';
+                    const tasksContainer = document.getElementById('tasks-container');
+
+                    if (!isAdmin) {
+                        tasksContainer.innerHTML = `
+                            <h3>📋 TASKS</h3>
+                            <p style="color: var(--warning-orange);">You are a member. Admins manage all tasks.</p>
+                        `;
+                        return;
+                    }
+
+                    tasksContainer.innerHTML = `
+                        <h3>📋 MANAGE TASKS</h3>
+                        <button class="add-task-btn" onclick="openTaskModal()">➕ ADD NEW TASK</button>
+                    `;
 
                     querySnapshot.forEach((doc) => {
-                        const user = doc.data();
-                        const userElement = document.createElement('div');
-                        userElement.innerHTML = `
-                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 10px; border-left: 4px solid ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};">
-                                <div>
-                                    <strong>${user.displayName || user.email}</strong>
-                                    <br>
-                                    <small>${user.email}</small>
-                                </div>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <span style="font-size: 12px; color: ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};">
-                                        ${user.role === 'admin' ? '👑 Admin' : '👤 Member'}
-                                    </span>
-                                    ${user.uid !== currentUser.uid ? (user.role === 'admin' ?
-                                        '<button onclick="setMember(\'' + doc.id + '\')" style="background: var(--primary-cyan); border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Make Member</button>' :
-                                        '<button onclick="setAdmin(\'' + doc.id + '\')" style="background: var(--warning-orange); border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Make Admin</button>'
-                                    ) : ''}
+                        const task = doc.data();
+                        const taskElement = document.createElement('div');
+                        taskElement.className = 'task-card';
+
+                        taskElement.innerHTML = `
+                            <div class="task-header">
+                                <span class="task-title">${task.title}</span>
+                                <div class="task-actions">
+                                    <i class="fas fa-edit edit-btn" onclick="editTask('${doc.id}')"></i>
+                                    <i class="fas fa-trash delete-btn" onclick="deleteTask('${doc.id}')"></i>
                                 </div>
                             </div>
+                            <div>Due: ${task.dueDate || 'No date'}</div>
+                            <div>Priority: ${task.priority}</div>
                         `;
-                        usersContainer.appendChild(userElement);
+                        tasksContainer.appendChild(taskElement);
                     });
                 });
         }
 
-        async function setAdmin(userId) {
-            if (confirm('Make this user an admin?')) {
-                try {
-                    await db.collection('users').doc(userId).update({ role: 'admin' });
-                } catch (error) {
-                    console.error('Error updating role:', error);
-                    alert('Error: ' + error.message);
-                }
-            }
-        }
-
-        async function setMember(userId) {
-            if (confirm('Make this user a member?')) {
-                try {
-                    await db.collection('users').doc(userId).update({ role: 'member' });
-                } catch (error) {
-                    console.error('Error updating role:', error);
-                    alert('Error: ' + error.message);
-                }
-            }
-        }
-
-        let currentTaskId = null;
-
-        // *** FIXED saveTask function - Corrected arrayUnion usage ***
+        // *** FIXED saveTask function - Using proper element IDs ***
         async function saveTask() {
             if (!currentUser) {
                 alert('Please sign in first');
                 return;
             }
 
-            const title = document.querySelector('input[type="text"]:nth-child(1)').value;
-            const description = document.querySelector('input[type="text"]:nth-child(2)').value;
-            const mapLink = document.getElementById('mapLink').value;
-            const dueDate = document.querySelector('input[type="datetime-local"]').value;
-            const repeat = document.getElementById('repeatOption').value;
-            const priority = document.querySelector('select:nth-child(2)').value;
+            // *** FIXED: Use proper element IDs to avoid null references ***
+            const titleInput = document.getElementById('taskTitle');
+            const descriptionInput = document.getElementById('taskDescription');
+            const mapLinkInput = document.getElementById('mapLink');
+            const dueDateInput = document.getElementById('dueDate');
+            const repeatSelect = document.getElementById('repeatOption');
+            const prioritySelect = document.getElementById('priority');
+
+            // Validate inputs exist
+            if (!titleInput || !descriptionInput || !mapLinkInput ||
+                !dueDateInput || !repeatSelect || !prioritySelect) {
+                alert('Error: Form elements not found. Please refresh the page.');
+                console.error('Missing form elements:', {
+                    titleInput, descriptionInput, mapLinkInput,
+                    dueDateInput, repeatSelect, prioritySelect
+                });
+                return;
+            }
+
+            const title = titleInput.value.trim();
+            const description = descriptionInput.value.trim();
+            const mapLink = mapLinkInput.value.trim();
+            const dueDate = dueDateInput.value;
+            const repeat = repeatSelect.value;
+            const priority = prioritySelect.value;
 
             if (!title) {
                 alert('Please enter a task title');
@@ -799,75 +492,79 @@
             }
         }
 
-        function loadTasks() {
-            db.collection("tasks").orderBy("createdAt", "desc")
+        function loadUsers() {
+            if (!isAdmin) return;
+
+            db.collection('users').orderBy('createdAt', 'desc')
                 .onSnapshot((querySnapshot) => {
-                    const tasksContainer = document.getElementById('tasks-container');
-                    tasksContainer.innerHTML = `
-                        <h3>📋 MANAGE TASKS</h3>
-                        <button class="add-task-btn" onclick="openTaskModal()" id="add-task-btn">➕ ADD NEW TASK</button>
-                    `;
+                    const usersContainer = document.getElementById('users-container');
+                    if (!usersContainer) return;
+
+                    usersContainer.innerHTML = '';
 
                     querySnapshot.forEach((doc) => {
-                        const task = doc.data();
-                        const taskElement = document.createElement('div');
-                        taskElement.className = 'task-card';
-
-                        let mapLinkHtml = '';
-                        if (task.mapLink) {
-                            const isWaze = task.mapLink.includes('waze.com');
-                            const linkClass = isWaze ? 'waze-link' : '';
-                            const linkText = isWaze ? '🗺️ Open Waze' : '🗺️ Open Google Maps';
-                            mapLinkHtml = `<a href="${task.mapLink}" target="_blank" class="map-link ${linkClass}">${linkText}</a>`;
-                        }
-
-                        const editBtn = isAdmin ? `<i class="fas fa-edit edit-btn" onclick="editTask('${doc.id}')"></i>` : '<i class="fas fa-edit edit-btn disabled-btn"></i>';
-                        const deleteBtn = isAdmin ? `<i class="fas fa-trash delete-btn" onclick="deleteTask('${doc.id}')"></i>` : '<i class="fas fa-trash delete-btn disabled-btn"></i>';
-
-                        taskElement.innerHTML = `
-                            <div class="task-header">
-                                <span class="task-title">${task.title}</span>
-                                <div class="task-actions">
-                                    ${editBtn}
-                                    ${deleteBtn}
+                        const user = doc.data();
+                        const userElement = document.createElement('div');
+                        userElement.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 10px; border-left: 4px solid ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};">
+                                <div>
+                                    <strong>${user.displayName || user.email}</strong>
+                                    <br>
+                                    <small>${user.email}</small>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 12px; color: ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};">
+                                        ${user.role === 'admin' ? '👑 Admin' : '👤 Member'}
+                                    </span>
+                                    ${user.uid !== currentUser.uid ? (user.role === 'admin' ?
+                                        '<button onclick="setMember(\'' + doc.id + '\')" style="background: var(--primary-cyan); border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Make Member</button>' :
+                                        '<button onclick="setAdmin(\'' + doc.id + '\')" style="background: var(--warning-orange); border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Make Admin</button>'
+                                    ) : ''}
                                 </div>
                             </div>
-                            <div class="task-info">
-                                <div>Due: ${task.dueDate || 'No date'}</div>
-                                <div>Priority: ${task.priority}</div>
-                                ${mapLinkHtml}
-                            </div>
-                            <span class="task-status ${getStatusClass(task.status)}">${task.status}</span>
-                            ${task.repeat ? `<span class="repeat-badge">🔁 ${task.repeat}</span>` : ''}
                         `;
-                        tasksContainer.appendChild(taskElement);
+                        usersContainer.appendChild(userElement);
                     });
                 });
         }
 
-        function getStatusClass(status) {
-            switch(status) {
-                case 'Completed': return 'status-completed';
-                case 'In Progress': return 'status-progress';
-                default: return 'status-pending';
+        async function setAdmin(userId) {
+            if (confirm('Make this user an admin?')) {
+                try {
+                    await db.collection('users').doc(userId).update({ role: 'admin' });
+                } catch (error) {
+                    console.error('Error updating role:', error);
+                    alert('Error: ' + error.message);
+                }
+            }
+        }
+
+        async function setMember(userId) {
+            if (confirm('Make this user a member?')) {
+                try {
+                    await db.collection('users').doc(userId).update({ role: 'member' });
+                } catch (error) {
+                    console.error('Error updating role:', error);
+                    alert('Error: ' + error.message);
+                }
             }
         }
 
         function editTask(taskId) {
             if (!isAdmin) {
-                alert('Members must request permission from admin to edit tasks');
+                alert('Members cannot edit tasks');
                 return;
             }
 
             db.collection("tasks").doc(taskId).get().then((doc) => {
                 if (doc.exists) {
                     const task = doc.data();
-                    document.querySelector('input[type="text"]:nth-child(1)').value = task.title;
-                    document.querySelector('input[type="text"]:nth-child(2)').value = task.description || '';
+                    document.getElementById('taskTitle').value = task.title || '';
+                    document.getElementById('taskDescription').value = task.description || '';
                     document.getElementById('mapLink').value = task.mapLink || '';
-                    document.querySelector('input[type="datetime-local"]').value = task.dueDate || '';
+                    document.getElementById('dueDate').value = task.dueDate || '';
                     document.getElementById('repeatOption').value = task.repeat || 'none';
-                    document.querySelector('select:nth-child(2)').value = task.priority;
+                    document.getElementById('priority').value = task.priority || 'Medium';
 
                     currentTaskId = taskId;
                     openTaskModal();
@@ -879,7 +576,7 @@
 
         function deleteTask(taskId) {
             if (!isAdmin) {
-                alert('Members must request permission from admin to delete tasks');
+                alert('Members cannot delete tasks');
                 return;
             }
 
@@ -890,32 +587,21 @@
             }
         }
 
-        function showTab(tabId) {
-            document.getElementById('dashboard').style.display = 'none';
-            document.getElementById('tasks').style.display = 'none';
-            document.getElementById('schedule').style.display = 'none';
-            document.getElementById('admin').style.display = 'none';
-
-            document.getElementById(tabId).style.display = 'block';
-
-            const tabs = document.querySelectorAll('.nav-tab');
-            tabs.forEach(tab => tab.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-        }
-
-        function openTaskModal(task = null) {
+        function openTaskModal() {
             document.getElementById('taskModal').style.display = 'flex';
         }
 
         function closeTaskModal() {
             document.getElementById('taskModal').style.display = 'none';
             currentTaskId = null;
-            document.querySelector('input[type="text"]:nth-child(1)').value = '';
-            document.querySelector('input[type="text"]:nth-child(2)').value = '';
+
+            // Clear form
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
             document.getElementById('mapLink').value = '';
-            document.querySelector('input[type="datetime-local"]').value = '';
+            document.getElementById('dueDate').value = '';
             document.getElementById('repeatOption').value = 'none';
-            document.querySelector('select:nth-child(2)').value = 'Medium';
+            document.getElementById('priority').value = 'Medium';
         }
 
         window.onclick = function(event) {
