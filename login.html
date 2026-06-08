@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🚛 DRIVER APP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <style>
@@ -316,7 +315,6 @@
             cursor: pointer;
         }
 
-        /* Auth Styles */
         .auth-container {
             display: flex;
             justify-content: center;
@@ -360,7 +358,6 @@
             </div>
         </div>
 
-        <!-- Rest of your dashboard content remains the same -->
         <div id="dashboard">
             <div class="status-panel">
                 <div class="location-status">
@@ -412,30 +409,182 @@
             </div>
         </div>
 
-        <!-- Other tabs remain the same as in previous version -->
         <div id="tasks" style="display: none;">
-            <!-- ... your tasks content ... -->
+            <div class="task-management">
+                <h3>📋 MANAGE TASKS</h3>
+                <button class="add-task-btn" onclick="openTaskModal()">➕ ADD NEW TASK</button>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Wash Truck Exterior</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Due: Today, 3:00 PM</div>
+                        <div>Priority: High</div>
+                    </div>
+                    <span class="task-status status-progress">In Progress</span>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Check Oil Levels</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Due: Tomorrow, 9:00 AM</div>
+                        <div>Priority: Medium</div>
+                    </div>
+                    <span class="task-status status-pending">Pending</span>
+                    <span class="repeat-badge">🔁 Weekly</span>
+                </div>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Submit Weekly Report</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Due: Next Monday</div>
+                        <div>Priority: Low</div>
+                    </div>
+                    <span class="task-status status-completed">Completed</span>
+                    <span class="repeat-badge">🔁 Monthly</span>
+                </div>
+            </div>
         </div>
 
         <div id="schedule" style="display: none;">
-            <!-- ... your schedule content ... -->
+            <div class="task-management">
+                <h3>📅 MONTHLY SCHEDULE - READ ONLY</h3>
+                <table style="width: 100%; border-collapse: collapse; color: var(--text-light);">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--primary-cyan);">
+                            <th style="padding: 12px; text-align: left;">Date</th>
+                            <th style="padding: 12px; text-align: center;">Clock In</th>
+                            <th style="padding: 12px; text-align: center;">Clock Out</th>
+                            <th style="padding: 12px; text-align: center;">Total Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
+                            <td style="padding: 12px;">Jun 1</td>
+                            <td style="padding: 12px; text-align: center;">08:00 AM</td>
+                            <td style="padding: 12px; text-align: center;">04:30 PM</td>
+                            <td style="padding: 12px; text-align: center;">8.5h</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
+                            <td style="padding: 12px;">Jun 2</td>
+                            <td style="padding: 12px; text-align: center;">08:15 AM</td>
+                            <td style="padding: 12px; text-align: center;">04:45 PM</td>
+                            <td style="padding: 12px; text-align: center;">8.5h</td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
+                            <td style="padding: 12px;">Jun 3</td>
+                            <td style="padding: 12px; text-align: center;">07:45 AM</td>
+                            <td style="padding: 12px; text-align: center;">05:00 PM</td>
+                            <td style="padding: 12px; text-align: center;">9.25h</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div id="admin" style="display: none;">
-            <!-- ... your admin content ... -->
+            <div class="task-management">
+                <h3>🔐 ADMIN PANEL</h3>
+                <p style="margin-bottom: 20px;">Manage driver tasks and schedules</p>
+
+                <button class="add-task-btn" onclick="openTaskModal()">➕ ADD TASK FOR DRIVER</button>
+
+                <div class="task-card">
+                    <div class="task-header">
+                        <span class="task-title">Wash Truck Exterior</span>
+                        <div class="task-actions">
+                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
+                            <i class="fas fa-trash delete-btn"></i>
+                        </div>
+                    </div>
+                    <div class="task-info">
+                        <div>Assigned: Alex Driver</div>
+                        <div>Due: Today, 3:00 PM</div>
+                        <div>Priority: High</div>
+                    </div>
+                    <span class="task-status status-progress">In Progress</span>
+                </div>
+
+                <div class="task-management">
+                    <h3>📊 DRIVER STATS</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div style="background: rgba(0,102,204,0.2); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 24px; color: var(--success-green);">16.25h</div>
+                            <div>Weekly Hours</div>
+                        </div>
+                        <div style="background: rgba(255,69,0,0.2); padding: 15px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 24px; color: var(--warning-orange);">3.75h</div>
+                            <div>Overtime</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Modal -->
+        <div id="taskModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeTaskModal()">&times;</span>
+                <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
+
+                <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input type="text" class="form-input" placeholder="Enter task title...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-input" placeholder="Enter description...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="datetime-local" class="form-input">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Repeat Option</label>
+                    <select class="form-input" id="repeatOption">
+                        <option value="none">📅 None (One-time)</option>
+                        <option value="daily">🔄 Daily</option>
+                        <option value="weekly">🔄 Weekly</option>
+                        <option value="monthly">🔄 Monthly</option>
+                        <option value="yearly">🔄 Yearly</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <select class="form-input">
+                        <option>High</option>
+                        <option>Medium</option>
+                        <option>Low</option>
+                    </select>
+                </div>
+
+                <button class="btn-submit" onclick="saveTask()">💾 SAVE TASK</button>
+            </div>
         </div>
     </div>
 
-    <!-- Modal for tasks -->
-    <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeTaskModal()">&times;</span>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
-            <!-- ... your modal content ... -->
-        </div>
-    </div>
-
-    <!-- Firebase Configuration - REPLACE WITH YOUR ACTUAL CONFIG -->
+    <!-- Firebase Configuration -->
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBsMZFdyciKjpcSufC4IbSxlehQ50zviEQ",
@@ -454,19 +603,12 @@
         auth.onAuthStateChanged(user => {
             const loginScreen = document.getElementById('login-screen');
             const dashboardContent = document.getElementById('dashboard-content');
-            const userInfoDiv = document.getElementById('user-info');
-            const authButton = document.getElementById('auth-button');
-            const logoutButton = document.getElementById('logout-button');
 
             if (user) {
-                // User is signed in - show dashboard
                 loginScreen.style.display = 'none';
                 dashboardContent.style.display = 'block';
-
-                // Update user info
                 document.getElementById('user-name').textContent = user.displayName || 'User';
             } else {
-                // User is signed out - show login
                 loginScreen.style.display = 'flex';
                 dashboardContent.style.display = 'none';
             }
@@ -485,21 +627,50 @@
                 });
         });
 
-        // Other functions remain the same...
+        // Tab switching function
         function showTab(tabId) {
-            // ... your existing tab switching logic ...
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('tasks').style.display = 'none';
+            document.getElementById('schedule').style.display = 'none';
+            document.getElementById('admin').style.display = 'none';
+
+            document.getElementById(tabId).style.display = 'block';
+
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.currentTarget.classList.add('active');
         }
 
+        // Task modal functions
         function openTaskModal(task = null) {
-            // ... your existing modal logic ...
+            document.getElementById('taskModal').style.display = 'flex';
         }
 
         function closeTaskModal() {
-            // ... your existing modal logic ...
+            document.getElementById('taskModal').style.display = 'none';
         }
 
         function saveTask() {
-            // ... your existing save logic ...
+            const title = document.querySelector('input[type="text"]:nth-child(1)').value;
+            const description = document.querySelector('input[type="text"]:nth-child(2)').value;
+            const dueDate = document.querySelector('input[type="datetime-local"]').value;
+            const repeat = document.getElementById('repeatOption').value;
+            const priority = document.querySelector('select:nth-child(2)').value;
+
+            if (title) {
+                console.log('Task Saved:', { title, description, dueDate, repeat, priority });
+                alert('✅ Task saved successfully!');
+                closeTaskModal();
+            } else {
+                alert('❌ Please enter a task title');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.id === 'taskModal') {
+                closeTaskModal();
+            }
         }
     </script>
 </body>
