@@ -1,12 +1,16 @@
+Code (html)
+html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🚛 DRIVER APP</title>
+    🚛 DRIVER APP
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <style>
         :root {
             --primary-cyan: #00FFFF;
@@ -33,16 +37,6 @@
             color: var(--text-light);
             min-height: 100vh;
             padding: 20px;
-        }
-
-        .app-container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: var(--glow-cyan);
-            overflow: hidden;
-            backdrop-filter: blur(10px);
         }
 
         .header {
@@ -230,6 +224,30 @@
         .task-info {
             font-size: 14px;
             color: var(--text-light);
+            margin-bottom: 8px;
+        }
+
+        /* Map Links Styling */
+        .map-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #4285F4, #34A853);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            text-decoration: none;
+            margin-top: 8px;
+            margin-right: 8px;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.4);
+            font-weight: 500;
+        }
+
+        .map-link:hover {
+            box-shadow: 0 4px 12px rgba(66, 133, 244, 0.6);
+        }
+
+        .waze-link {
+            background: linear-gradient(45deg, #0077CC, #00AAFF);
         }
 
         .task-status {
@@ -344,12 +362,12 @@
         </div>
     </div>
 
-    <!-- Dashboard Content (Hidden initially) -->
+    <!-- Dashboard Content -->
     <div id="dashboard-content" style="display: none;">
         <div class="header">
             <h1>🚀 DRIVER APP</h1>
             <p>Welcome, <span id="user-name">User</span>! 🌟</p>
-
+            
             <div class="nav-tabs">
                 <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
                 <div class="nav-tab" onclick="showTab('tasks')">TASKS</div>
@@ -388,16 +406,16 @@
             <div class="controls-section">
                 <button class="clock-button">🟢 CLOCK IN</button>
                 <button class="clock-button clock-out">🔴 CLOCK OUT</button>
-
+                
                 <div class="task-management">
                     <h3>📸 TASK DOCUMENTATION</h3>
                     <p>Current Task: Wash Truck</p>
                     <p>Due: Today, 3:00 PM</p>
-
+                    
                     <div class="photo-buttons">
                         <button class="add-task-btn">📷 Take Photo</button>
                     </div>
-
+                    
                     <div class="task-card">
                         <div class="task-header">
                             <span class="task-title">Truck Wash</span>
@@ -410,56 +428,9 @@
         </div>
 
         <div id="tasks" style="display: none;">
-            <div class="task-management">
+            <div class="task-management" id="tasks-container">
                 <h3>📋 MANAGE TASKS</h3>
                 <button class="add-task-btn" onclick="openTaskModal()">➕ ADD NEW TASK</button>
-
-                <div class="task-card">
-                    <div class="task-header">
-                        <span class="task-title">Wash Truck Exterior</span>
-                        <div class="task-actions">
-                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
-                            <i class="fas fa-trash delete-btn"></i>
-                        </div>
-                    </div>
-                    <div class="task-info">
-                        <div>Due: Today, 3:00 PM</div>
-                        <div>Priority: High</div>
-                    </div>
-                    <span class="task-status status-progress">In Progress</span>
-                </div>
-
-                <div class="task-card">
-                    <div class="task-header">
-                        <span class="task-title">Check Oil Levels</span>
-                        <div class="task-actions">
-                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
-                            <i class="fas fa-trash delete-btn"></i>
-                        </div>
-                    </div>
-                    <div class="task-info">
-                        <div>Due: Tomorrow, 9:00 AM</div>
-                        <div>Priority: Medium</div>
-                    </div>
-                    <span class="task-status status-pending">Pending</span>
-                    <span class="repeat-badge">🔁 Weekly</span>
-                </div>
-
-                <div class="task-card">
-                    <div class="task-header">
-                        <span class="task-title">Submit Weekly Report</span>
-                        <div class="task-actions">
-                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
-                            <i class="fas fa-trash delete-btn"></i>
-                        </div>
-                    </div>
-                    <div class="task-info">
-                        <div>Due: Next Monday</div>
-                        <div>Priority: Low</div>
-                    </div>
-                    <span class="task-status status-completed">Completed</span>
-                    <span class="repeat-badge">🔁 Monthly</span>
-                </div>
             </div>
         </div>
 
@@ -503,25 +474,7 @@
             <div class="task-management">
                 <h3>🔐 ADMIN PANEL</h3>
                 <p style="margin-bottom: 20px;">Manage driver tasks and schedules</p>
-
-                <button class="add-task-btn" onclick="openTaskModal()">➕ ADD TASK FOR DRIVER</button>
-
-                <div class="task-card">
-                    <div class="task-header">
-                        <span class="task-title">Wash Truck Exterior</span>
-                        <div class="task-actions">
-                            <i class="fas fa-edit edit-btn" onclick="openTaskModal()"></i>
-                            <i class="fas fa-trash delete-btn"></i>
-                        </div>
-                    </div>
-                    <div class="task-info">
-                        <div>Assigned: Alex Driver</div>
-                        <div>Due: Today, 3:00 PM</div>
-                        <div>Priority: High</div>
-                    </div>
-                    <span class="task-status status-progress">In Progress</span>
-                </div>
-
+                
                 <div class="task-management">
                     <h3>📊 DRIVER STATS</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
@@ -543,22 +496,28 @@
             <div class="modal-content">
                 <span class="close-modal" onclick="closeTaskModal()">&times;</span>
                 <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
-
+                
                 <div class="form-group">
                     <label class="form-label">Task Title</label>
                     <input type="text" class="form-input" placeholder="Enter task title...">
                 </div>
-
+                
                 <div class="form-group">
                     <label class="form-label">Description</label>
                     <input type="text" class="form-input" placeholder="Enter description...">
                 </div>
-
+                
+                <div class="form-group">
+                    <label class="form-label">📍 Location Link (Google Maps/Waze)</label>
+                    <input type="url" class="form-input" id="mapLink" placeholder="Paste map link here...">
+                    <small style="color: var(--text-light); opacity: 0.7;">e.g., https://maps.google.com/?q=123+Main+St</small>
+                </div>
+                
                 <div class="form-group">
                     <label class="form-label">Due Date</label>
                     <input type="datetime-local" class="form-input">
                 </div>
-
+                
                 <div class="form-group">
                     <label class="form-label">Repeat Option</label>
                     <select class="form-input" id="repeatOption">
@@ -569,7 +528,7 @@
                         <option value="yearly">🔄 Yearly</option>
                     </select>
                 </div>
-
+                
                 <div class="form-group">
                     <label class="form-label">Priority</label>
                     <select class="form-input">
@@ -578,7 +537,7 @@
                         <option>Low</option>
                     </select>
                 </div>
-
+                
                 <button class="btn-submit" onclick="saveTask()">💾 SAVE TASK</button>
             </div>
         </div>
@@ -586,6 +545,7 @@
 
     <!-- Firebase Configuration -->
     <script>
+        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBsMZFdyciKjpcSufC4IbSxlehQ50zviEQ",
             authDomain: "driver-app-auth-b87de.firebaseapp.com",
@@ -598,16 +558,18 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const db = firebase.firestore();
 
         // Auth state listener
         auth.onAuthStateChanged(user => {
             const loginScreen = document.getElementById('login-screen');
             const dashboardContent = document.getElementById('dashboard-content');
-
+            
             if (user) {
                 loginScreen.style.display = 'none';
                 dashboardContent.style.display = 'block';
                 document.getElementById('user-name').textContent = user.displayName || 'User';
+                loadTasks();
             } else {
                 loginScreen.style.display = 'flex';
                 dashboardContent.style.display = 'none';
@@ -627,15 +589,128 @@
                 });
         });
 
+        // Load tasks from Firestore
+        function loadTasks() {
+            db.collection("tasks").orderBy("createdAt", "desc")
+                .onSnapshot((querySnapshot) => {
+                    const tasksContainer = document.getElementById('tasks-container');
+                    tasksContainer.innerHTML = `
+                        <h3>📋 MANAGE TASKS</h3>
+                        <button class="add-task-btn" onclick="openTaskModal()">➕ ADD NEW TASK</button>
+                    `;
+                    
+                    querySnapshot.forEach((doc) => {
+                        const task = doc.data();
+                        const taskElement = document.createElement('div');
+                        taskElement.className = 'task-card';
+                        
+                        let mapLinkHtml = '';
+                        if (task.mapLink) {
+                            const isWaze = task.mapLink.includes('waze.com');
+                            const linkClass = isWaze ? 'waze-link' : '';
+                            const linkText = isWaze ? '🗺️ Open Waze' : '🗺️ Open Google Maps';
+                            mapLinkHtml = `<a href="${task.mapLink}" target="_blank" class="map-link ${linkClass}">${linkText}</a>`;
+                        }
+                        
+                        taskElement.innerHTML = `
+                            <div class="task-header">
+                                <span class="task-title">${task.title}</span>
+                                <div class="task-actions">
+                                    <i class="fas fa-edit edit-btn" onclick="editTask('${doc.id}')"></i>
+                                    <i class="fas fa-trash delete-btn" onclick="deleteTask('${doc.id}')"></i>
+                                </div>
+                            </div>
+                            <div class="task-info">
+                                <div>Due: ${task.dueDate || 'No date'}</div>
+                                <div>Priority: ${task.priority}</div>
+                                ${mapLinkHtml}
+                            </div>
+                            <span class="task-status ${getStatusClass(task.status)}">${task.status}</span>
+                            ${task.repeat ? `<span class="repeat-badge">🔁 ${task.repeat}</span>` : ''}
+                        `;
+                        tasksContainer.appendChild(taskElement);
+                    });
+                });
+        }
+
+        // Helper function to get status class
+        function getStatusClass(status) {
+            switch(status) {
+                case 'Completed': return 'status-completed';
+                case 'In Progress': return 'status-progress';
+                default: return 'status-pending';
+            }
+        }
+
+        // Save task to Firestore
+        function saveTask() {
+            const title = document.querySelector('input[type="text"]:nth-child(1)').value;
+            const description = document.querySelector('input[type="text"]:nth-child(2)').value;
+            const mapLink = document.getElementById('mapLink').value;
+            const dueDate = document.querySelector('input[type="datetime-local"]').value;
+            const repeat = document.getElementById('repeatOption').value;
+            const priority = document.querySelector('select:nth-child(2)').value;
+
+            if (title) {
+                const taskData = {
+                    title: title,
+                    description: description,
+                    mapLink: mapLink || null,
+                    dueDate: dueDate,
+                    priority: priority,
+                    status: "Pending",
+                    repeat: repeat !== 'none' ? repeat : null,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                if (currentTaskId) {
+                    db.collection("tasks").doc(currentTaskId).update(taskData);
+                } else {
+                    db.collection("tasks").add(taskData);
+                }
+                
+                closeTaskModal();
+            } else {
+                alert('❌ Please enter a task title');
+            }
+        }
+
+        // Edit task
+        function editTask(taskId) {
+            db.collection("tasks").doc(taskId).get().then((doc) => {
+                if (doc.exists) {
+                    const task = doc.data();
+                    document.querySelector('input[type="text"]:nth-child(1)').value = task.title;
+                    document.querySelector('input[type="text"]:nth-child(2)').value = task.description || '';
+                    document.getElementById('mapLink').value = task.mapLink || '';
+                    document.querySelector('input[type="datetime-local"]').value = task.dueDate || '';
+                    document.getElementById('repeatOption').value = task.repeat || 'none';
+                    document.querySelector('select:nth-child(2)').value = task.priority;
+                    
+                    currentTaskId = taskId;
+                    openTaskModal();
+                }
+            });
+        }
+
+        // Delete task
+        function deleteTask(taskId) {
+            if (confirm('Are you sure you want to delete this task?')) {
+                db.collection("tasks").doc(taskId).delete();
+            }
+        }
+
+        let currentTaskId = null;
+
         // Tab switching function
         function showTab(tabId) {
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('tasks').style.display = 'none';
             document.getElementById('schedule').style.display = 'none';
             document.getElementById('admin').style.display = 'none';
-
+            
             document.getElementById(tabId).style.display = 'block';
-
+            
             const tabs = document.querySelectorAll('.nav-tab');
             tabs.forEach(tab => tab.classList.remove('active'));
             event.currentTarget.classList.add('active');
@@ -648,22 +723,13 @@
 
         function closeTaskModal() {
             document.getElementById('taskModal').style.display = 'none';
-        }
-
-        function saveTask() {
-            const title = document.querySelector('input[type="text"]:nth-child(1)').value;
-            const description = document.querySelector('input[type="text"]:nth-child(2)').value;
-            const dueDate = document.querySelector('input[type="datetime-local"]').value;
-            const repeat = document.getElementById('repeatOption').value;
-            const priority = document.querySelector('select:nth-child(2)').value;
-
-            if (title) {
-                console.log('Task Saved:', { title, description, dueDate, repeat, priority });
-                alert('✅ Task saved successfully!');
-                closeTaskModal();
-            } else {
-                alert('❌ Please enter a task title');
-            }
+            currentTaskId = null;
+            document.querySelector('input[type="text"]:nth-child(1)').value = '';
+            document.querySelector('input[type="text"]:nth-child(2)').value = '';
+            document.getElementById('mapLink').value = '';
+            document.querySelector('input[type="datetime-local"]').value = '';
+            document.getElementById('repeatOption').value = 'none';
+            document.querySelector('select:nth-child(2)').value = 'Medium';
         }
 
         // Close modal when clicking outside
