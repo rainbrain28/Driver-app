@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    🚛 DRIVER APP
+    <title>🚛 DRIVER APP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -42,7 +41,6 @@
             color: white;
             padding: 25px;
             text-align: center;
-            position: relative;
             border-bottom: 2px solid var(--primary-cyan);
         }
 
@@ -282,29 +280,104 @@
             text-align: center;
             border: 2px solid var(--primary-cyan);
         }
+
+        .status-panel {
+            background: rgba(0, 102, 204, 0.2);
+            padding: 20px;
+            margin: 15px;
+            border-radius: 15px;
+            border-left: 3px solid var(--primary-cyan);
+        }
+
+        .location-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .geofence-indicator {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .inside { background-color: var(--success-green); }
+        .outside { background-color: var(--danger-red); }
+
+        .stats-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            padding: 20px;
+            background: rgba(0, 255, 127, 0.1);
+            margin: 15px;
+            border-radius: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--success-green);
+            text-shadow: 0 0 5px var(--success-green);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .controls-section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .clock-button {
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-cyan));
+            color: white;
+            border: 2px solid var(--primary-cyan);
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 15px 40px;
+            margin: 10px;
+            cursor: pointer;
+            box-shadow: var(--glow-cyan);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .clock-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--primary-cyan);
+        }
+
+        .clock-out {
+            background: linear-gradient(45deg, var(--danger-red), var(--warning-orange));
+            border-color: var(--warning-orange);
+        }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
     <div id="login-screen" class="auth-container">
         <div class="auth-box">
             <h2 style="color: var(--primary-cyan); margin-bottom: 20px;">🚛 DRIVER APP</h2>
             <p style="margin-bottom: 30px;">Sign in to access your dashboard</p>
-            <button id="auth-button" class="clock-button">
-                🔐 Sign in with Google
-            </button>
+            <button id="auth-button" class="clock-button">🔐 Sign in with Google</button>
         </div>
     </div>
 
-    <!-- Dashboard Content -->
     <div id="dashboard-content" style="display: none;">
         <div class="header">
             <h1>🚀 DRIVER APP</h1>
-            <p>
-                Welcome, <span id="user-name">User</span>! 🌟
-                <span id="role-badge"></span>
-            </p>
-            
+            <p>Welcome, <span id="user-name">User</span>! 🌟 <span id="role-badge"></span></p>
+
             <div class="nav-tabs">
                 <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
                 <div class="nav-tab" onclick="showTab('tasks')">TASKS</div>
@@ -347,16 +420,16 @@
             <div class="controls-section">
                 <button class="clock-button">🟢 CLOCK IN</button>
                 <button class="clock-button clock-out">🔴 CLOCK OUT</button>
-                
+
                 <div class="task-management">
                     <h3>📸 TASK DOCUMENTATION</h3>
                     <p>Current Task: Wash Truck</p>
                     <p>Due: Today, 3:00 PM</p>
-                    
+
                     <div class="photo-buttons">
                         <button class="add-task-btn" id="photo-btn">📷 Take Photo</button>
                     </div>
-                    
+
                     <div class="task-card">
                         <div class="task-header">
                             <span class="task-title">Truck Wash</span>
@@ -372,7 +445,6 @@
             <div class="task-management" id="tasks-container">
                 <h3>📋 MANAGE TASKS</h3>
                 <button class="add-task-btn" onclick="openTaskModal()" id="add-task-btn">➕ ADD NEW TASK</button>
-                <!-- Tasks will be loaded here from Firestore -->
             </div>
         </div>
 
@@ -416,14 +488,13 @@
             <div class="task-management">
                 <h3>🔐 ADMIN PANEL</h3>
                 <p style="margin-bottom: 20px;">Manage driver roles and permissions</p>
-                
+
                 <div class="task-management" id="user-list">
                     <h3>👥 USER ROLES</h3>
                     <div id="users-container">
-                        <!-- Users will be listed here -->
                     </div>
                 </div>
-                
+
                 <div class="task-management">
                     <h3>📊 DRIVER STATS</h3>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
@@ -440,37 +511,36 @@
             </div>
         </div>
 
-        <!-- Task Modal -->
         <div id="taskModal" class="modal">
             <div class="modal-content">
                 <span class="close-modal" onclick="closeTaskModal()">&times;</span>
                 <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
-                
+
                 <div class="permission-warning" id="task-permission-warning" style="display: none;">
                     ⚠️ Member requesting permission to modify this task
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Task Title</label>
                     <input type="text" class="form-input" placeholder="Enter task title...">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Description</label>
                     <input type="text" class="form-input" placeholder="Enter description...">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">📍 Location Link (Google Maps/Waze)</label>
                     <input type="url" class="form-input" id="mapLink" placeholder="Paste map link here...">
                     <small style="color: var(--text-light); opacity: 0.7;">e.g., https://maps.google.com/?q=123+Main+St</small>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Due Date</label>
                     <input type="datetime-local" class="form-input">
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Repeat Option</label>
                     <select class="form-input" id="repeatOption">
@@ -481,7 +551,7 @@
                         <option value="yearly">🔄 Yearly</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label class="form-label">Priority</label>
                     <select class="form-input">
@@ -490,15 +560,13 @@
                         <option>Low</option>
                     </select>
                 </div>
-                
+
                 <button class="btn-submit" onclick="saveTask()">💾 SAVE TASK</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase Configuration -->
     <script>
-        // Your Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBsMZFdyciKjpcSufC4IbSxlehQ50zviEQ",
             authDomain: "driver-app-auth-b87de.firebaseapp.com",
@@ -508,37 +576,28 @@
             appId: "1:691923028632:web:e9813913d01788947c1eed"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Current user info
         let currentUser = null;
         let currentUserRole = null;
         let isAdmin = false;
 
-        // Auth state listener
         auth.onAuthStateChanged(async user => {
             const loginScreen = document.getElementById('login-screen');
             const dashboardContent = document.getElementById('dashboard-content');
-            
+
             if (user) {
                 currentUser = user;
                 loginScreen.style.display = 'none';
                 dashboardContent.style.display = 'block';
                 document.getElementById('user-name').textContent = user.displayName || 'User';
-                
-                // Get user role
+
                 await getUserRole(user.uid);
-                
-                // Update UI based on role
                 updateUIForRole();
-                
-                // Load tasks
                 loadTasks();
-                
-                // Load users for admin panel
+
                 if (isAdmin) {
                     loadUsers();
                 }
@@ -548,15 +607,22 @@
             }
         });
 
-        // Get user role from Firestore
+        document.getElementById('auth-button').addEventListener('click', () => {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => console.log('Sign in successful', result.user))
+                .catch(error => {
+                    console.error('Sign in error', error);
+                    alert('Login failed: ' + error.message);
+                });
+        });
+
         async function getUserRole(userId) {
             try {
                 const userDoc = await db.collection('users').doc(userId).get();
                 if (userDoc.exists) {
                     currentUserRole = userDoc.data().role || 'member';
                 } else {
-                    // Create new user document with default role
-                    currentUserRole = 'member';
                     await db.collection('users').doc(userId).set({
                         uid: userId,
                         email: currentUser.email,
@@ -564,9 +630,9 @@
                         role: 'member',
                         createdAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
+                    currentUserRole = 'member';
                 }
                 isAdmin = (currentUserRole === 'admin');
-                return currentUserRole;
             } catch (error) {
                 console.error('Error getting user role:', error);
                 currentUserRole = 'member';
@@ -574,13 +640,12 @@
             }
         }
 
-        // Update UI based on user role
         function updateUIForRole() {
             const roleBadge = document.getElementById('role-badge');
             const permissionWarning = document.getElementById('permission-warning');
             const addTaskBtn = document.getElementById('add-task-btn');
             const photoBtn = document.getElementById('photo-btn');
-            
+
             if (isAdmin) {
                 roleBadge.innerHTML = '<span class="admin-badge">ADMIN</span>';
                 permissionWarning.style.display = 'none';
@@ -594,43 +659,31 @@
             }
         }
 
-        // Load users for admin panel
         function loadUsers() {
             db.collection('users').orderBy('createdAt', 'desc')
                 .onSnapshot((querySnapshot) => {
                     const usersContainer = document.getElementById('users-container');
                     usersContainer.innerHTML = '';
-                    
+
                     querySnapshot.forEach((doc) => {
                         const user = doc.data();
                         const userElement = document.createElement('div');
-                        userElement.style.cssText = `
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: center;
-                            background: rgba(255,255,255,0.05);
-                            padding: 12px;
-                            margin-bottom: 10px;
-                            border-radius: 10px;
-                            border-left: 4px solid ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};
-                        `;
-                        
                         userElement.innerHTML = `
-                            <div>
-                                <strong>${user.displayName || user.email}</strong>
-                                <br>
-                                <small>${user.email}</small>
-                            </div>
-                            <div style="display: flex; align-items: center; gap: 10px;">
-                                <span style="font-size: 12px; color: ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};">
-                                    ${user.role === 'admin' ? '👑 Admin' : '👤 Member'}
-                                </span>
-                                ${user.uid !== currentUser.uid ? `
-                                    ${user.role === 'admin' ? 
+                            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.05); padding: 12px; margin-bottom: 10px; border-radius: 10px; border-left: 4px solid ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};">
+                                <div>
+                                    <strong>${user.displayName || user.email}</strong>
+                                    <br>
+                                    <small>${user.email}</small>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span style="font-size: 12px; color: ${user.role === 'admin' ? 'var(--warning-orange)' : 'var(--primary-cyan)'};">
+                                        ${user.role === 'admin' ? '👑 Admin' : '👤 Member'}
+                                    </span>
+                                    ${user.uid !== currentUser.uid ? (user.role === 'admin' ?
                                         '<button onclick="setMember(\'' + doc.id + '\')" style="background: var(--primary-cyan); border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Make Member</button>' :
                                         '<button onclick="setAdmin(\'' + doc.id + '\')" style="background: var(--warning-orange); border: none; border-radius: 5px; padding: 5px 10px; cursor: pointer;">Make Admin</button>'
-                                    }
-                                ` : ''}
+                                    ) : ''}
+                                </div>
                             </div>
                         `;
                         usersContainer.appendChild(userElement);
@@ -638,38 +691,114 @@
                 });
         }
 
-        // Set user as admin
         async function setAdmin(userId) {
             if (confirm('Make this user an admin?')) {
-                await db.collection('users').doc(userId).update({
-                    role: 'admin'
-                });
+                try {
+                    await db.collection('users').doc(userId).update({ role: 'admin' });
+                } catch (error) {
+                    console.error('Error updating role:', error);
+                    alert('Error: ' + error.message);
+                }
             }
         }
 
-        // Set user as member
         async function setMember(userId) {
             if (confirm('Make this user a member?')) {
-                await db.collection('users').doc(userId).update({
-                    role: 'member'
-                });
+                try {
+                    await db.collection('users').doc(userId).update({ role: 'member' });
+                } catch (error) {
+                    console.error('Error updating role:', error);
+                    alert('Error: ' + error.message);
+                }
             }
         }
 
-        // Sign in with Google
-        document.getElementById('auth-button').addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider)
-                .then(result => {
-                    console.log('Sign in successful', result.user);
-                })
-                .catch(error => {
-                    console.error('Sign in error', error);
-                    alert('Login failed: ' + error.message);
-                });
-        });
+        let currentTaskId = null;
 
-        // Load tasks from Firestore
+        // *** FIXED saveTask function - Corrected arrayUnion usage ***
+        async function saveTask() {
+            if (!currentUser) {
+                alert('Please sign in first');
+                return;
+            }
+
+            const title = document.querySelector('input[type="text"]:nth-child(1)').value;
+            const description = document.querySelector('input[type="text"]:nth-child(2)').value;
+            const mapLink = document.getElementById('mapLink').value;
+            const dueDate = document.querySelector('input[type="datetime-local"]').value;
+            const repeat = document.getElementById('repeatOption').value;
+            const priority = document.querySelector('select:nth-child(2)').value;
+
+            if (!title) {
+                alert('Please enter a task title');
+                return;
+            }
+
+            // Check permission for members
+            if (!isAdmin) {
+                try {
+                    // *** FIXED: Create request object FIRST, then use arrayUnion ***
+                    const request = {
+                        userId: currentUser.uid,
+                        userName: currentUser.displayName || 'Unknown',
+                        userEmail: currentUser.email,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+                        action: 'edit_task',
+                        taskTitle: title
+                    };
+
+                    const adminRef = db.collection('admins').doc('main');
+                    const adminDoc = await adminRef.get();
+
+                    if (!adminDoc.exists) {
+                        await adminRef.set({
+                            pendingRequests: []
+                        });
+                    }
+
+                    // *** NOW use arrayUnion with the pre-created request object ***
+                    await adminRef.update({
+                        pendingRequests: firebase.firestore.FieldValue.arrayUnion(request)
+                    });
+
+                    alert('Permission request sent to admin!');
+                    closeTaskModal();
+                    return;
+                } catch (error) {
+                    console.error('Error requesting permission:', error);
+                    alert('Error sending permission request: ' + error.message);
+                    return;
+                }
+            }
+
+            // Admin tasks save directly
+            const taskData = {
+                title: title,
+                description: description,
+                mapLink: mapLink || null,
+                dueDate: dueDate,
+                priority: priority,
+                status: "Pending",
+                repeat: repeat !== 'none' ? repeat : null,
+                createdBy: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                if (currentTaskId) {
+                    await db.collection("tasks").doc(currentTaskId).update(taskData);
+                    console.log('Task updated successfully');
+                } else {
+                    await db.collection("tasks").add(taskData);
+                    console.log('Task added successfully');
+                }
+                closeTaskModal();
+            } catch (error) {
+                console.error('Error saving task:', error);
+                alert('Error saving task: ' + error.message);
+            }
+        }
+
         function loadTasks() {
             db.collection("tasks").orderBy("createdAt", "desc")
                 .onSnapshot((querySnapshot) => {
@@ -678,12 +807,12 @@
                         <h3>📋 MANAGE TASKS</h3>
                         <button class="add-task-btn" onclick="openTaskModal()" id="add-task-btn">➕ ADD NEW TASK</button>
                     `;
-                    
+
                     querySnapshot.forEach((doc) => {
                         const task = doc.data();
                         const taskElement = document.createElement('div');
                         taskElement.className = 'task-card';
-                        
+
                         let mapLinkHtml = '';
                         if (task.mapLink) {
                             const isWaze = task.mapLink.includes('waze.com');
@@ -691,11 +820,10 @@
                             const linkText = isWaze ? '🗺️ Open Waze' : '🗺️ Open Google Maps';
                             mapLinkHtml = `<a href="${task.mapLink}" target="_blank" class="map-link ${linkClass}">${linkText}</a>`;
                         }
-                        
-                        // Disable edit/delete buttons for members
+
                         const editBtn = isAdmin ? `<i class="fas fa-edit edit-btn" onclick="editTask('${doc.id}')"></i>` : '<i class="fas fa-edit edit-btn disabled-btn"></i>';
                         const deleteBtn = isAdmin ? `<i class="fas fa-trash delete-btn" onclick="deleteTask('${doc.id}')"></i>` : '<i class="fas fa-trash delete-btn disabled-btn"></i>';
-                        
+
                         taskElement.innerHTML = `
                             <div class="task-header">
                                 <span class="task-title">${task.title}</span>
@@ -717,7 +845,6 @@
                 });
         }
 
-        // Helper function to get status class
         function getStatusClass(status) {
             switch(status) {
                 case 'Completed': return 'status-completed';
@@ -726,64 +853,12 @@
             }
         }
 
-        // Save task to Firestore
-        async function saveTask() {
-            // Check permission for members
-            if (!isAdmin) {
-                // Request permission from admin
-                const adminRef = db.collection('admins').doc('main');
-                await adminRef.update({
-                    pendingRequests: firebase.firestore.FieldValue.arrayUnion({
-                        userId: currentUser.uid,
-                        userName: currentUser.displayName,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        action: 'edit_task'
-                    })
-                });
-                alert('Permission request sent to admin!');
-                closeTaskModal();
-                return;
-            }
-            
-            const title = document.querySelector('input[type="text"]:nth-child(1)').value;
-            const description = document.querySelector('input[type="text"]:nth-child(2)').value;
-            const mapLink = document.getElementById('mapLink').value;
-            const dueDate = document.querySelector('input[type="datetime-local"]').value;
-            const repeat = document.getElementById('repeatOption').value;
-            const priority = document.querySelector('select:nth-child(2)').value;
-
-            if (title) {
-                const taskData = {
-                    title: title,
-                    description: description,
-                    mapLink: mapLink || null,
-                    dueDate: dueDate,
-                    priority: priority,
-                    status: "Pending",
-                    repeat: repeat !== 'none' ? repeat : null,
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                if (currentTaskId) {
-                    db.collection("tasks").doc(currentTaskId).update(taskData);
-                } else {
-                    db.collection("tasks").add(taskData);
-                }
-                
-                closeTaskModal();
-            } else {
-                alert('❌ Please enter a task title');
-            }
-        }
-
-        // Edit task
         function editTask(taskId) {
-            // Only admins can edit directly
             if (!isAdmin) {
                 alert('Members must request permission from admin to edit tasks');
                 return;
             }
-            
+
             db.collection("tasks").doc(taskId).get().then((doc) => {
                 if (doc.exists) {
                     const task = doc.data();
@@ -793,43 +868,41 @@
                     document.querySelector('input[type="datetime-local"]').value = task.dueDate || '';
                     document.getElementById('repeatOption').value = task.repeat || 'none';
                     document.querySelector('select:nth-child(2)').value = task.priority;
-                    
+
                     currentTaskId = taskId;
                     openTaskModal();
                 }
+            }).catch(error => {
+                console.error('Error getting task:', error);
             });
         }
 
-        // Delete task
         function deleteTask(taskId) {
-            // Only admins can delete
             if (!isAdmin) {
                 alert('Members must request permission from admin to delete tasks');
                 return;
             }
-            
+
             if (confirm('Are you sure you want to delete this task?')) {
-                db.collection("tasks").doc(taskId).delete();
+                db.collection("tasks").doc(taskId).delete().catch(error => {
+                    console.error('Error deleting task:', error);
+                });
             }
         }
 
-        let currentTaskId = null;
-
-        // Tab switching function
         function showTab(tabId) {
             document.getElementById('dashboard').style.display = 'none';
             document.getElementById('tasks').style.display = 'none';
             document.getElementById('schedule').style.display = 'none';
             document.getElementById('admin').style.display = 'none';
-            
+
             document.getElementById(tabId).style.display = 'block';
-            
+
             const tabs = document.querySelectorAll('.nav-tab');
             tabs.forEach(tab => tab.classList.remove('active'));
             event.currentTarget.classList.add('active');
         }
 
-        // Task modal functions
         function openTaskModal(task = null) {
             document.getElementById('taskModal').style.display = 'flex';
         }
@@ -845,7 +918,6 @@
             document.querySelector('select:nth-child(2)').value = 'Medium';
         }
 
-        // Close modal when clicking outside
         window.onclick = function(event) {
             if (event.target.id === 'taskModal') {
                 closeTaskModal();
