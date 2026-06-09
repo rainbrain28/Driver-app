@@ -8,6 +8,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         :root {
             --primary-cyan: #00FFFF;
@@ -62,86 +63,6 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 10px rgba(255, 69, 0, 0.5);
-        }
-
-        .logout-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 15px var(--danger-red);
-        }
-
-        .nav-tabs {
-            display: flex;
-            background: rgba(0, 102, 204, 0.3);
-            padding: 10px;
-            gap: 5px;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-        }
-
-        .nav-tab.active {
-            background: var(--primary-cyan);
-            color: var(--dark-bg);
-            font-weight: bold;
-            border-color: var(--accent-purple);
-        }
-
-        .task-management {
-            background: rgba(138, 43, 226, 0.1);
-            margin: 15px;
-            border-radius: 15px;
-            padding: 20px;
-        }
-
-        .add-task-btn {
-            background: linear-gradient(45deg, var(--accent-purple), var(--primary-blue));
-            color: white;
-            border: 2px solid var(--primary-cyan);
-            border-radius: 12px;
-            padding: 15px;
-            width: 100%;
-            font-weight: bold;
-            cursor: pointer;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-        }
-
-        .add-task-btn:hover {
-            box-shadow: var(--glow-cyan);
-        }
-
-        .add-task-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .task-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-left: 4px solid var(--primary-cyan);
-        }
-
-        .task-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .task-title {
-            font-weight: bold;
-            color: var(--primary-cyan);
         }
 
         .modal {
@@ -205,6 +126,36 @@
             cursor: pointer;
         }
 
+        .role-option {
+            background: rgba(0, 102, 204, 0.2);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .role-option:hover {
+            transform: scale(1.02);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .qr-code-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .invite-code {
+            font-family: monospace;
+            font-size: 24px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+            letter-spacing: 3px;
+            margin: 10px 0;
+        }
+
         .auth-container {
             display: flex;
             justify-content: center;
@@ -226,8 +177,40 @@
     <div id="login-screen" class="auth-container">
         <div class="auth-box">
             <h2 style="color: var(--primary-cyan); margin-bottom: 20px;">🚛 DRIVER APP</h2>
-            <p style="margin-bottom: 30px;">Sign in to access your dashboard</p>
-            <button id="auth-button" class="add-task-btn">🔐 Sign in with Google</button>
+            <p style="margin-bottom: 30px;">Loading...</p>
+        </div>
+    </div>
+
+    <div id="role-selection-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeRoleModal()">&times;</span>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">🔐 SELECT YOUR ROLE</h3>
+            <p style="margin-bottom: 20px;">Choose your role for the Driver App:</p>
+
+            <div class="role-option" onclick="selectRole('admin')">
+                <h4 style="color: var(--success-green);">👑 ADMIN</h4>
+                <p>Create tasks, manage members, generate invites</p>
+            </div>
+
+            <div class="role-option" onclick="selectRole('member')">
+                <h4 style="color: var(--primary-cyan);">👤 MEMBER</h4>
+                <p>Join using invite code from admin</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="member-join-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeMemberModal()">&times;</span>
+            <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">🚪 JOIN AS MEMBER</h3>
+            <p style="margin-bottom: 20px;">Enter your invite code:</p>
+
+            <div class="form-group">
+                <label class="form-label">INITE CODE</label>
+                <input type="text" id="inviteCode" class="form-input" placeholder="Enter 6-digit code">
+            </div>
+
+            <button class="btn-submit" onclick="joinWithCode()">🔗 JOIN TEAM</button>
         </div>
     </div>
 
@@ -236,57 +219,22 @@
             <h1>🚀 DRIVER APP</h1>
             <p>Welcome, <span id="user-name">User</span>! 🌟 <span id="role-badge"></span></p>
             <button class="logout-btn" onclick="logout()">🔐 Logout</button>
+        </div>
 
-            <div class="nav-tabs">
-                <div class="nav-tab active" onclick="showTab('dashboard')">DASHBOARD</div>
-                <div class="nav-tab" onclick="showTab('tasks')">TASKS</div>
+        <div id="admin-panel" style="display: none;">
+            <div class="auth-box" style="margin: 20px;">
+                <h3 style="color: var(--success-green);">👑 ADMIN PANEL</h3>
+                <button class="btn-submit" onclick="generateInvite()">📱 GENERATE INVITE QR</button>
+                <div id="invite-result" style="margin-top: 20px;"></div>
             </div>
         </div>
 
-        <div id="dashboard">
-            <div class="task-management">
-                <h3>📋 MANAGE TASKS</h3>
-                <button class="add-task-btn" onclick="openTaskModal()" id="add-task-btn">➕ ADD NEW TASK</button>
-                <div id="tasks-container"></div>
+        <div id="member-panel" style="display: none;">
+            <div class="auth-box" style="margin: 20px;">
+                <h3 style="color: var(--primary-cyan);">👤 MEMBER MODE</h3>
+                <p>You need an invite code from an admin</p>
+                <button class="btn-submit" onclick="openMemberModal()">🔗 ENTER INVITE CODE</button>
             </div>
-        </div>
-    </div>
-
-    <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeTaskModal()">&times;</span>
-            <h3 style="color: var(--primary-cyan); margin-bottom: 20px;">📝 TASK DETAILS</h3>
-
-            <div class="form-group">
-                <label class="form-label">Task Title</label>
-                <input type="text" id="taskTitle" class="form-input" placeholder="Enter task title...">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Description</label>
-                <input type="text" id="taskDescription" class="form-input" placeholder="Enter description...">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">📍 Location Link</label>
-                <input type="url" class="form-input" id="mapLink" placeholder="Paste map link here...">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Due Date</label>
-                <input type="datetime-local" id="dueDate" class="form-input">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Priority</label>
-                <select class="form-input" id="priority">
-                    <option>High</option>
-                    <option>Medium</option>
-                    <option>Low</option>
-                </select>
-            </div>
-
-            <button class="btn-submit" onclick="saveTask()">💾 SAVE TASK</button>
         </div>
     </div>
 
@@ -305,258 +253,183 @@
         const db = firebase.firestore();
 
         let currentUser = null;
-        let isAdmin = false;
-        let currentTaskId = null;
+        let userRole = null;
+        let currentInviteId = null;
 
+        // Authentication state listener
         auth.onAuthStateChanged(async user => {
-            const loginScreen = document.getElementById('login-screen');
-            const dashboardContent = document.getElementById('dashboard-content');
-
             if (user) {
                 currentUser = user;
-                loginScreen.style.display = 'none';
-                dashboardContent.style.display = 'block';
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('dashboard-content').style.display = 'block';
                 document.getElementById('user-name').textContent = user.displayName || 'User';
 
-                await getUserRole(user.uid);
-                updateUIForRole();
-                loadTasks();
+                // Check user role
+                await checkUserRole();
             } else {
-                loginScreen.style.display = 'flex';
-                dashboardContent.style.display = 'none';
+                document.getElementById('login-screen').style.display = 'flex';
+                document.getElementById('dashboard-content').style.display = 'none';
             }
         });
 
-        document.getElementById('auth-button').addEventListener('click', () => {
+        // Google Sign-in
+        document.getElementById('auth-button')?.addEventListener('click', () => {
             const provider = new firebase.auth.GoogleAuthProvider();
             auth.signInWithPopup(provider)
-                .then(result => console.log('Sign in successful', result.user))
                 .catch(error => {
                     console.error('Sign in error', error);
                     alert('Login failed: ' + error.message);
                 });
         });
 
-        async function getUserRole(userId) {
-            try {
-                const userDoc = await db.collection('users').doc(userId).get();
-                if (userDoc.exists) {
-                    isAdmin = userDoc.data().role === 'admin';
-                } else {
-                    // Create new user as member
-                    await db.collection('users').doc(userId).set({
-                        uid: userId,
-                        email: currentUser.email,
-                        displayName: currentUser.displayName,
-                        role: 'member',
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    isAdmin = false;
-                }
-            } catch (error) {
-                console.error('Error getting user role:', error);
-                isAdmin = false;
+        // Check if user exists and determine role
+        async function checkUserRole() {
+            const userDoc = await db.collection('users').doc(currentUser.uid).get();
+
+            if (!userDoc.exists) {
+                // New user - show role selection
+                document.getElementById('role-selection-modal').style.display = 'flex';
+            } else {
+                // Existing user
+                userRole = userDoc.data().role;
+                updateUserInterface();
             }
         }
 
-        function updateUIForRole() {
-            const addTaskBtn = document.getElementById('add-task-btn');
-            if (addTaskBtn) {
-                addTaskBtn.disabled = !isAdmin;
-                if (!isAdmin) {
-                    alert('You are a member. Admins will manage tasks.');
-                }
-            }
-        }
-
-        function loadTasks() {
-            db.collection("tasks").orderBy("createdAt", "desc")
-                .onSnapshot((querySnapshot) => {
-                    const tasksContainer = document.getElementById('tasks-container');
-                    if (!tasksContainer) return;
-
-                    if (!isAdmin) {
-                        tasksContainer.innerHTML = '<p style="color: var(--warning-orange);">You are a member. Admins manage all tasks.</p>';
-                        return;
-                    }
-
-                    tasksContainer.innerHTML = '';
-
-                    querySnapshot.forEach((doc) => {
-                        const task = doc.data();
-                        const taskElement = document.createElement('div');
-                        taskElement.className = 'task-card';
-                        taskElement.innerHTML = `
-                            <div class="task-header">
-                                <span class="task-title">${task.title}</span>
-                                <div class="task-actions">
-                                    <i class="fas fa-edit" onclick="editTask('${doc.id}')"></i>
-                                    <i class="fas fa-trash" onclick="deleteTask('${doc.id}')"></i>
-                                </div>
-                            </div>
-                            <div>Due: ${task.dueDate || 'No date'}</div>
-                            <div>Priority: ${task.priority}</div>
-                        `;
-                        tasksContainer.appendChild(taskElement);
-                    });
+        // Role selection
+        async function selectRole(role) {
+            if (role === 'admin') {
+                // Create admin user
+                await db.collection('users').doc(currentUser.uid).set({
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    displayName: currentUser.displayName,
+                    role: 'admin',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
+                userRole = 'admin';
+            } else {
+                // Create pending member
+                await db.collection('users').doc(currentUser.uid).set({
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    displayName: currentUser.displayName,
+                    role: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                userRole = 'pending';
+            }
+
+            closeRoleModal();
+            updateUserInterface();
         }
 
-        async function saveTask() {
-            if (!currentUser) {
-                alert('Please sign in first');
-                return;
-            }
-
-            const titleInput = document.getElementById('taskTitle');
-            const descriptionInput = document.getElementById('taskDescription');
-            const mapLinkInput = document.getElementById('mapLink');
-            const dueDateInput = document.getElementById('dueDate');
-            const prioritySelect = document.getElementById('priority');
-
-            if (!titleInput) {
-                alert('Form not loaded. Please refresh the page.');
-                return;
-            }
-
-            const title = titleInput.value.trim();
-            const description = descriptionInput?.value.trim() || '';
-            const mapLink = mapLinkInput?.value.trim() || '';
-            const dueDate = dueDateInput?.value || '';
-            const priority = prioritySelect?.value || 'Medium';
-
-            if (!title) {
-                alert('Please enter a task title');
-                return;
-            }
-
-            if (!isAdmin) {
-                try {
-                    const request = {
-                        userId: currentUser.uid,
-                        userName: currentUser.displayName || 'Unknown',
-                        userEmail: currentUser.email,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                        action: 'edit_task',
-                        taskTitle: title
-                    };
-
-                    const adminRef = db.collection('admins').doc('main');
-                    const adminDoc = await adminRef.get();
-
-                    if (!adminDoc.exists) {
-                        await adminRef.set({ pendingRequests: [] });
-                    }
-
-                    await adminRef.update({
-                        pendingRequests: firebase.firestore.FieldValue.arrayUnion(request)
-                    });
-
-                    alert('Permission request sent to admin!');
-                    closeTaskModal();
-                    return;
-                } catch (error) {
-                    console.error('Error requesting permission:', error);
-                    alert('Error sending permission request: ' + error.message);
-                    return;
-                }
-            }
-
-            const taskData = {
-                title: title,
-                description: description,
-                mapLink: mapLink || null,
-                dueDate: dueDate,
-                priority: priority,
-                status: "Pending",
-                createdAt: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            try {
-                if (currentTaskId) {
-                    await db.collection("tasks").doc(currentTaskId).update(taskData);
-                } else {
-                    await db.collection("tasks").add(taskData);
-                }
-                closeTaskModal();
-            } catch (error) {
-                console.error('Error saving task:', error);
-                alert('Error saving task: ' + error.message);
-            }
+        function closeRoleModal() {
+            document.getElementById('role-selection-modal').style.display = 'none';
         }
 
-        function editTask(taskId) {
-            if (!isAdmin) {
-                alert('Members cannot edit tasks');
-                return;
-            }
+        function updateUserInterface() {
+            document.getElementById('role-badge').innerHTML =
+                userRole === 'admin' ? '<span style="background: var(--warning-orange); padding: 2px 8px; border-radius: 10px;">ADMIN</span>' : '';
 
-            db.collection("tasks").doc(taskId).get().then((doc) => {
-                if (doc.exists) {
-                    const task = doc.data();
-                    document.getElementById('taskTitle').value = task.title || '';
-                    document.getElementById('taskDescription').value = task.description || '';
-                    document.getElementById('mapLink').value = task.mapLink || '';
-                    document.getElementById('dueDate').value = task.dueDate || '';
-                    document.getElementById('priority').value = task.priority || 'Medium';
+            document.getElementById('admin-panel').style.display =
+                userRole === 'admin' ? 'block' : 'none';
 
-                    currentTaskId = taskId;
-                    openTaskModal();
-                }
+            document.getElementById('member-panel').style.display =
+                userRole === 'member' ? 'block' : 'none';
+        }
+
+        // Generate invite QR code
+        async function generateInvite() {
+            const inviteId = 'invite_' + Date.now();
+            const inviteCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+            await db.collection('invites').doc(inviteId).set({
+                code: inviteCode,
+                createdBy: currentUser.uid,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                used: false
             });
+
+            currentInviteId = inviteId;
+
+            // Generate QR code
+            try {
+                const qrElement = document.createElement('div');
+                qrElement.id = 'qr-code';
+                document.getElementById('invite-result').innerHTML = '';
+                document.getElementById('invite-result').appendChild(qrElement);
+
+                QRCode.toCanvas(qrElement, inviteCode, function(error) {
+                    if (error) console.error('QR Code error:', error);
+                });
+
+                // Show invite code
+                document.getElementById('invite-result').innerHTML += `
+                    <div class="invite-code">${inviteCode}</div>
+                    <p style="color: var(--success-green);">Share this code with new members!</p>
+                `;
+            } catch (error) {
+                console.error('QR generation error:', error);
+            }
         }
 
-        function deleteTask(taskId) {
-            if (!isAdmin) {
-                alert('Members cannot delete tasks');
+        // Join with invite code
+        function openMemberModal() {
+            document.getElementById('member-join-modal').style.display = 'flex';
+        }
+
+        async function joinWithCode() {
+            const code = document.getElementById('inviteCode').value.trim();
+            if (!code) {
+                alert('Please enter invite code');
                 return;
             }
 
-            if (confirm('Are you sure you want to delete this task?')) {
-                db.collection("tasks").doc(taskId).delete();
+            // Find invite
+            const inviteQuery = await db.collection('invites')
+                .where('code', '==', code)
+                .where('used', '==', false)
+                .limit(1)
+                .get();
+
+            if (inviteQuery.empty) {
+                alert('Invalid or used invite code');
+                return;
             }
+
+            const inviteDoc = inviteQuery.docs[0];
+
+            // Mark as used
+            await db.collection('invites').doc(inviteDoc.id).update({ used: true });
+
+            // Update user role
+            await db.collection('users').doc(currentUser.uid).update({ role: 'member' });
+
+            userRole = 'member';
+            closeMemberModal();
+            updateUserInterface();
+            alert('Successfully joined as member!');
         }
 
-        function showTab(tabId) {
-            document.getElementById('dashboard').style.display = tabId === 'dashboard' ? 'block' : 'none';
-            document.getElementById('tasks').style.display = tabId === 'tasks' ? 'block' : 'none';
+        function closeMemberModal() {
+            document.getElementById('member-join-modal').style.display = 'none';
         }
 
-        function openTaskModal() {
-            document.getElementById('taskModal').style.display = 'flex';
-        }
-
-        function closeTaskModal() {
-            document.getElementById('taskModal').style.display = 'none';
-            currentTaskId = null;
-            document.getElementById('taskTitle').value = '';
-            document.getElementById('taskDescription').value = '';
-            document.getElementById('mapLink').value = '';
-            document.getElementById('dueDate').value = '';
-            document.getElementById('priority').value = 'Medium';
-        }
-
-        // *** LOGOUT FUNCTION ***
+        // Logout function
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 firebase.auth().signOut().then(() => {
-                    // Reset UI state
+                    currentUser = null;
+                    userRole = null;
                     document.getElementById('user-name').textContent = 'User';
                     document.getElementById('role-badge').innerHTML = '';
                     document.getElementById('login-screen').style.display = 'flex';
                     document.getElementById('dashboard-content').style.display = 'none';
-                    currentUser = null;
-                    isAdmin = false;
                 }).catch(error => {
                     console.error('Logout error:', error);
                     alert('Logout failed: ' + error.message);
                 });
-            }
-        }
-
-        window.onclick = function(event) {
-            if (event.target.id === 'taskModal') {
-                closeTaskModal();
             }
         }
     </script>
