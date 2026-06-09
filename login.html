@@ -64,6 +64,11 @@
             font-weight: bold;
         }
 
+        @media (max-width: 768px) {
+            .header h1 { font-size: 22px; }
+            .auth-box { padding: 30px 20px !important; }
+        }
+
         .task-card {
             background: rgba(255, 255, 255, 0.05);
             border-radius: 12px;
@@ -198,6 +203,49 @@
             border: 2px solid var(--primary-cyan);
         }
 
+        .google-btn {
+            background: white;
+            color: var(--dark-bg);
+            border: 2px solid var(--primary-cyan);
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .google-btn:hover {
+            transform: scale(1.02);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .google-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .loading-dots {
+            display: inline-block;
+            overflow: hidden;
+            height: 20px;
+        }
+
+        .loading-dots:after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
         .task-management {
             background: rgba(138, 43, 226, 0.1);
             margin: 15px;
@@ -214,13 +262,18 @@
     <div id="login-screen" class="auth-container">
         <div class="auth-box">
             <h2 style="color: var(--primary-cyan); margin-bottom: 20px;">🚛 DRIVER APP</h2>
-            <p style="margin-bottom: 30px;">Loading...</p>
+            <p style="margin-bottom: 30px;">Sign in to access your dashboard</p>
+            <button id="auth-button" class="google-btn">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgbm9TdHJva2U9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTE3LjgxIDI4LjY5SDEyLjYxTTYuMjcgMTcuOTZ2LTIuNzZINDB2LTIuNzhJMi4zMi0uOTUgMi4zMi0yLjM4VjkuNDNDMi4zMi0xLjA1IDAuOTUgMS4xMSAwIDEuMTE0di0uMDJjMC0uNDEtMS4zMi0uNTUtMS4zMi0uOTV2LTIuNThhMS4zMiAxLjM0IDAgMCAwLTIgMS4zNmgwdi0uMDBhMS4zMiAxLjM0IDAgIDAgLTItMS4zMnYtMi41OGE3LjUyIDcuNTIgMCAwIDEtNy41Mi03LjUyIDcuNTIgNy41MiAwIDAgMCAwIDcuNTIgNy41MiA1LjUyIDUuNTIgMCAwIDEgNy41MiA3LjUyem0tMTUuNTEgNS4xOEwxMC42OCAxMC45TDI0LjcgNC41MVotLjkgLTIuNjd6IiBmaWxsPSIjRkZGIi8+PC9zdmc+" alt="Google Icon" class="google-icon">
+                Sign in with Google
+            </button>
+            <p style="margin-top: 20px; color: var(--warning-orange);">Loading Firebase...</p>
         </div>
     </div>
 
     <div id="dashboard-content" style="display: none;">
         <div class="header">
-            <h1>Driver Management System</h1>
+            <h1>🚀 DRIVER APP</h1>
             <p>Welcome, <span id="user-name">User</span>! 🌟 <span id="role-badge"></span></p>
             <button class="logout-btn" onclick="logout()">🔐 Logout</button>
         </div>
@@ -292,40 +345,65 @@
         let userRole = null;
         let currentTaskId = null;
 
+        // Initialize auth state listener immediately
         auth.onAuthStateChanged(async user => {
+            const loginScreen = document.getElementById('login-screen');
+            const dashboardContent = document.getElementById('dashboard-content');
+
             if (user) {
                 currentUser = user;
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('dashboard-content').style.display = 'block';
+                loginScreen.style.display = 'none';
+                dashboardContent.style.display = 'block';
                 document.getElementById('user-name').textContent = user.displayName || 'User';
 
                 await checkUserRole();
                 loadTasks();
             } else {
-                document.getElementById('login-screen').style.display = 'flex';
-                document.getElementById('dashboard-content').style.display = 'none';
+                loginScreen.style.display = 'flex';
+                dashboardContent.style.display = 'none';
             }
         });
 
-        document.getElementById('auth-button')?.addEventListener('click', () => {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            auth.signInWithPopup(provider).catch(error => {
-                alert('Login failed: ' + error.message);
-            });
+        // Setup Google Sign-In button
+        document.addEventListener('DOMContentLoaded', function() {
+            const authButton = document.getElementById('auth-button');
+            if (authButton) {
+                authButton.addEventListener('click', handleGoogleSignIn);
+            }
         });
 
+        function handleGoogleSignIn() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.addScope('profile');
+            provider.addScope('email');
+
+            auth.signInWithPopup(provider)
+                .then((result) => {
+                    console.log('Sign in successful', result.user);
+                })
+                .catch((error) => {
+                    console.error('Sign in error', error);
+                    alert('Login failed: ' + error.message);
+                });
+        }
+
         async function checkUserRole() {
-            const userDoc = await db.collection('users').doc(currentUser.uid).get();
-            userRole = userDoc.exists ? userDoc.data().role : 'member';
+            try {
+                const userDoc = await db.collection('users').doc(currentUser.uid).get();
+                userRole = userDoc.exists ? userDoc.data().role : 'member';
 
-            document.getElementById('role-badge').innerHTML =
-                userRole === 'admin' ? '<span style="background: var(--warning-orange); padding: 2px 8px; border-radius: 10px;">ADMIN</span>' : '';
+                document.getElementById('role-badge').innerHTML =
+                    userRole === 'admin' ? '<span style="background: var(--warning-orange); padding: 2px 8px; border-radius: 10px;">ADMIN</span>' : '';
 
-            document.getElementById('admin-panel').style.display =
-                userRole === 'admin' ? 'block' : 'none';
+                document.getElementById('admin-panel').style.display =
+                    userRole === 'admin' ? 'block' : 'none';
 
-            document.getElementById('member-panel').style.display =
-                userRole === 'member' ? 'block' : 'none';
+                document.getElementById('member-panel').style.display =
+                    userRole === 'member' ? 'block' : 'none';
+            } catch (error) {
+                console.error('Role check error:', error);
+                userRole = 'member';
+            }
         }
 
         function openTaskModal() {
@@ -418,6 +496,9 @@
                         `;
                         container.appendChild(taskElement);
                     });
+                }, (error) => {
+                    console.error('Tasks listener error:', error);
+                    container.innerHTML = '<p style="color: var(--danger-red);">Error loading tasks. Check console.</p>';
                 });
         }
 
